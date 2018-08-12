@@ -1,0 +1,15 @@
+.navbar-primary .navbar-nav > .active{
+    color: white;
+    background: dodgerblue;
+}
+.navbar-primary .navbar-nav > .active > a,
+.navbar-primary .navbar-nav > .active > a:hover,
+.navbar-primary .navbar-nav > .active > a:focus {
+    color: white;
+    background: dodgerblue;
+}
+
+.home a{
+    background: dodgerblue;
+    color: white;
+}
