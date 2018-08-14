@@ -25,6 +25,7 @@
       <script src="js/controllers/home_controller.js"></script>
       <script src="js/controllers/new_semester_controller.js"></script>
       <script src="js/controllers/manage_semesters_controller.js"></script>
+      <script src="js/controllers/new_okr_controller.js"></script>
 
 </head>
 <body ng-app="App" ng-controller="HomeController as $home" ng-cloak>
@@ -46,6 +47,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li ng-if="user" ng-class="{active: $route.current.activetab == 'new'}"><a href="/new_semester">New Semester</a></li>
+        <li ng-if="user" ng-class="{active: $route.current.activetab == 'okr'}"><a href="/new_okr">New OKR</a></li>
         <li ng-if="user" ng-class="{active: $route.current.activetab == 'manage'}"><a href="/manage_semesters">Manage Semesters</a></li>
       </ul>
       <form ng-if="!user" class="navbar-form navbar-right">

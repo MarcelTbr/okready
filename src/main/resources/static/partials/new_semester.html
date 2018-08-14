@@ -1,7 +1,99 @@
-<main class="container" ng-controller="NewSemesterController">
+<main id="new_semester" class="container-custom" ng-controller="NewSemesterController">
+   <aside id="okr_input">
+
     <h3>New Semester</h3>
+    <section id="new_sect_1">
+
+        <div>
+
+            <form id="new_form_1" >
+
+                <label for="year">Select Year</label>
+                <select class="form-control" id="year" data-ng-options="y for y in years" data-ng-model="form1.year" ng-disabled="step1">
+                </select>
+
+                <label for="semester">Select Semester</label>
+                <select class="form-control" id="semester" data-ng-options="s.name for s in semesters" data-ng-model="form1.semester" ng-disabled="step1"></select>
 
 
+                <button class="btn window-button btn-primary" ng-click="openSemester()" ng-disabled="step1">Open Semester</button>
 
+            </form>
+        </div>
+        <div>
+            <p class="bg-success text-success">{{message}}</p>
+            <button ng-show="step1" class="btn window-button btn-danger" ng-click="undoOpenSemester()">Undo</button>
+        </div>
+    </section>
+
+    <section id="new_sect_2" ng-show="step1">
+        <div>
+            <h3>New Objective</h3>
+            <form id="new_form_2">
+                <label for="name">Name:</label>
+                <input type="text" ng-disabled="step2" id="name" class="form-control" ng-model="name"/>
+
+                <label for="name">Total Wins:  &nbsp;&nbsp;</label><span ><b id="selectedRange">50</b></span>
+                <div class="slidecontainer">
+                  <input type="range" ng-disabled="step2" min="25" max="150" value="50" class="slider" id="winsRange" ng-model="wins">
+                </div>
+                <button type="submit" class="btn btn-primary" ng-disabled="step2" ng-click="newProvOKR()">New OKR</button>
+            </form>
+        </div>
+        <div ng-show="step2">
+            <p id="new_prov_okr_success" class="bg-success text-success">You can now add some Key Results to your main objective</p>
+            <div class="objective">
+            <h4>Objective: {{name}}</h4>
+            <p>Total Wins: <b>{{wins}}</b></p>
+            <ul class="kr_list">
+                <li ng-repeat="okr in array" class="kr bg-primary text-white shadow rounded">
+                    <span>{{okr.title}}</span>
+                    <span>{{okr.wins_ratio}} Wins</span>
+                </li>
+
+            </ul>
+            </div>
+        </div>
+    </section>
+    <section id="new_sect_3" ng-show="step2">
+            <div>
+                <h3>Add Key Results</h3>
+                <form id="new_form_3">
+                    <label for="kr_name">Key Result:</label>
+                    <input ng-disabled="array.length >= 5" type="text"  id="kr_name" class="form-control" ng-model="key_result"/>
+
+                    <label for="name">Wins/Result:  &nbsp;&nbsp;</label>
+                    <input ng-disabled="array.length >= 5" type="number" class="form-control" ng-model="result_wins">
+                    <button ng-disabled="array.length >= 5" type="submit" class="btn btn-primary" ng-click="newProvResult()">New Key Result</button>
+                </form>
+            </div>
+            <div>
+                <div ng-show="step3_1" class="bg-success text-success" style="margin-bottom: 5px;">
+
+                    <p>You can now save your Objective, <br> or keep adding Key Results.</p>
+
+                </div>
+                <button ng-show="step3_1" class="btn btn-primary" ng-click="saveOKR()">Save Objective</button>
+                <div ng-show="step3_2" class="bg-danger text-danger">
+                    <p>Sorry, it's better to have only a handful of key results</p>
+                </div>
+            </div>
+        </section>
+    </aside>
+    <aside id="okr_list" class="center">
+        <h3>OKR LIST</h3>
+        <div class="okr-item" ng-repeat="okr in okr_array">
+        <button class="accordion" ng-click="accToggle($index)"><b>{{okr.total_wins}}W | {{okr.title}}</b></button>
+        <div class="panel">
+          <ul class="kr_list">
+              <li ng-repeat="kr in okr.results" class="kr bg-primary text-white shadow rounded">
+                  <span>{{kr.title}}</span>
+                  <span>{{kr.wins_ratio}} Wins</span>
+              </li>
+
+          </ul>
+        </div>
+        </div>
+    </aside>
 
 </main>
