@@ -1,7 +1,22 @@
-<main class="container" ng-controller="ManageSemestersController">
+<main class="container" >
     <h3>Manage Semesters</h3>
 
+    <div ng-repeat="year in yearsDTO">
+         <button class="accordion" ng-click="accToggle($index)"><b>{{year.year}}</b></button>
+            <div class="panel">
+              <ul class="kr_list">
+                  <a href="/view_semester/{{year.year}}/{{semester.value}}" ng-repeat="semester in year.semesters">
+                      <li  class="kr bg-primary text-white shadow rounded">
+                          <span>{{semester.name}}</span>
 
+                          <span ng-bind="calculateCompletion(semester)"></span>
+
+                      </li>
+                  </a>
+              </ul>
+            </div>
+
+    </div>
 
 
 </main>

@@ -1,7 +1,13 @@
 package com.marceltbr.okready;
 
 import com.marceltbr.okready.entities.AppUser;
+import com.marceltbr.okready.entities.Semester;
+import com.marceltbr.okready.entities.Year;
+import com.marceltbr.okready.entities.YearSemester;
 import com.marceltbr.okready.repositories.AppUserRepository;
+import com.marceltbr.okready.repositories.SemesterRepository;
+import com.marceltbr.okready.repositories.YearRepository;
+import com.marceltbr.okready.repositories.YearSemesterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -69,13 +75,21 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 
 
 	@Bean
-	public CommandLineRunner initData(AppUserRepository appUserRepository) {
+	public CommandLineRunner initData(AppUserRepository appUserRepository, YearRepository yearRepository,
+									  YearSemesterRepository yearSemesterRepository, SemesterRepository semesterRepository) {
 
 		return (args) -> {
 
-
+			//create admin user
 			AppUser admin = new AppUser("admin123", "admin123");
 			appUserRepository.save(admin);
+
+			//create initial year and semester data
+			Year year = new Year(2018); yearRepository.save(year);
+			Semester sem1 = new Semester(1, "1st");
+			semesterRepository.save(sem1);
+			YearSemester yearSemester = new YearSemester(year, sem1);
+			yearSemesterRepository.save(yearSemester);
 		};
 	}
 }
@@ -129,19 +143,19 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.authorizeRequests()
 				.antMatchers("/", "/index.html", "/app/login", "/app/logout", "/js/**", "/img/**", "/css/**",
-						"/bower_components/**", "/partials/home.html").permitAll()
+						"/bower_components/**", "/home", "/partials/home.html").permitAll()
 				.antMatchers("/**", "/partials/**", "/api/**").hasAnyAuthority("USER")
 				.anyRequest().fullyAuthenticated();
 
 
 		http.formLogin()
-				.loginPage("/app/login")
-				.permitAll();
+				.loginPage("/app/login");
+
                 /*.anyRequest().fullyAuthenticated().
                 and().httpBasic();*/
 
-		http.logout().logoutUrl("/app/logout")
-		.permitAll();
+		http.logout().logoutUrl("/app/logout");
+
 
 		// turn off checking for CSRF tokens
 		http.csrf().disable();

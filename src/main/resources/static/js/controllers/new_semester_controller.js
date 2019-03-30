@@ -29,7 +29,7 @@ app.controller('NewSemesterController', ['$scope', '$http', '$location', '$inter
 
             $scope.step1 = true;
            $("#new_sect_1:nth-child(2) p").css('visibility', 'visible');
-           $("#new_sect_1").css('backgroundColor', 'grey');
+           $("#new_sect_1").css('backgroundColor', 'lightblue');
         };
 
        $scope.undoOpenSemester = function () {
@@ -60,7 +60,7 @@ app.controller('NewSemesterController', ['$scope', '$http', '$location', '$inter
         $scope.newProvOKR = function(){
 
             $("#new_sect_2:nth-child(2)").css('visibility', 'visible');
-            $("#new_sect_2").css('backgroundColor', 'grey');
+            $("#new_sect_2").css('backgroundColor', 'lightblue');
             $scope.step2 = true;
             $scope.result_wins = 1;
         };

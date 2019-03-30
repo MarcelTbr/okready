@@ -7,7 +7,22 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
         $rootScope.user = false;
         $scope.$route = $route;
 
+        function checkSession() {
 
+            var pass = localStorage.getItem("open-okr-session");
+           if(pass === null){
+
+               var page =  $window.location.href;
+               if(page != "/home"){
+                   page = "/home";
+               }
+           } else {
+               $rootScope.user = true;
+           }
+
+        }
+
+        checkSession();
 
         vm.LogmeIn = function() {
 
@@ -27,7 +42,10 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                     $rootScope.user = true;
                 }
                 vm.password = "";
+                localStorage.setItem("open-okr-session", "yes");
+
             });
+
 
         };
 
@@ -41,6 +59,9 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                     console.log("logged-out!");
                    $rootScope.user = false;
                     vm.password = "";
+
+                    localStorage.removeItem("open-okr-session");
+                    $window.location.href = "/";
                 });
              };
 

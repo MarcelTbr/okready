@@ -1,7 +1,7 @@
 'use strict'
 
-app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval', '$window', '$rootScope',
-    function ($scope, $http, $location, $interval, $window, $rootScope) {
+app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval', '$timeout', '$window', '$rootScope',
+    function ($scope, $http, $location, $interval, $timeout, $window, $rootScope) {
 
         function addClass(el, className) {
             if (el.classList)
@@ -13,7 +13,8 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
         $scope.form1 = {};
         $scope.form2 = {};
         $scope.form3 = {};
-        $scope.form1.year = 2018;
+        var today = new Date();
+        $scope.form1.year = today.getFullYear();
 
         $scope.semesters = [
             {'name': '1st', 'value': 1},
@@ -42,11 +43,21 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
 
         $scope.step1 = false;
         $scope.save = false;
+
         $scope.openSemester = function(){
 
             $("#new_f1").css("backgroundColor", "lightgrey");
             $scope.step1 = true;
+            $("#caroussel").animate({
+                scrollTop: "200px"
+            }, 2000);
+            $timeout(function() {
 
+                if($scope.step1) {
+                    $('#objective_title').focus()
+                }
+
+            }, 2500);
         };
 
         $scope.back = function(step){
@@ -87,13 +98,14 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
 
             switch(step){
                 case 2:
-                    console.log($("#objective_title").attr("disabled"));
+                        //console.log($("#objective_title").attr("disabled"));
                     if(cond1 && cond2){
 
                         $scope.step2 = true;
                         $("#new_f2").css("backgroundColor", "lightgrey");
                         $("#fs_1").attr("disabled", true);
                         step2();
+
 
                     } else{
                         alert("please make sure you all fields are full and checked");
@@ -111,15 +123,30 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                         $scope.form3.kr_title = "";
                         $scope.form3.kr_wins = "";
                         $scope.step3 = true;
+
+                        // reset key results title and wins input fields
+                        $scope.not("kr_title", 1);
+                        $scope.not("kr_wins", 2);
+
+                        //focus on okr title input field
+                        $timeout( $('#kr_title').focus(), 2000);
+
                     } else{
                         alert("Sorry it's better to have only a handful of key results."
                         + "\n You can now save your objective");
                     }
                     break;
                 case 4:
-                    if($scope.okr_array.length < 5){
 
-                        $scope.step2 = false; $scope.step3 = false;
+                    if($scope.okr_array[$scope.curr_okr ].results.length <= 1 && $scope.okr_array[$scope.curr_okr].results[0].title == undefined){
+                        alert ("Sorry you have to defina at least one objective key result");
+
+                        $('#kr_title').focus();
+
+                    }else if($scope.okr_array.length < 5 ) {
+
+                        $scope.step2 = false;
+                        $scope.step3 = false;
                         $("#new_f2").css("backgroundColor", "white");
                         $scope.not('objective_title', 11);
                         $scope.not('objective_wins', 12);
@@ -129,19 +156,28 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                         $scope.form2.obj_title = "";
                         $scope.form2.obj_wins = "";
 
-                    }else{
+                        //focus on objective title
+                        $("#objective_title").focus();
+
+                    }else {
                         alert("Sorry you can only have a handful of OKRs");
                     }
+                    break;
             }
 
         }
 
         $scope.ok = function(id, num){
 
+            var $elem = $('#'+id);
 
-            $("#"+id).attr("disabled", true);
-            $("#ok" + num).css("display", "none");
-            $("#not" + num).css("visibility", "visible");
+            if($elem.val() != "") {
+                $("#" + id).attr("disabled", true);
+                $("#ok" + num).css("display", "none");
+                $("#not" + num).css("visibility", "visible");
+            } else {
+                alert("Please define a value");
+            }
         };
 
         $scope.not = function(id, num) {
@@ -186,15 +222,116 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
             var okr_obj = {};
             okr_obj.title = $scope.form2.obj_title;
             okr_obj.total_wins = $scope.form2.obj_wins;
+
+            console.log(okr_obj);
             okr_obj.results = [];
             $scope.okr_array.push(okr_obj);
             if($scope.okr_array.length > 0){
                 $scope.save = true;
             }
+            $("#caroussel").animate({
+                scrollTop: "400px"
+            }, 2000);
+
+            //apply change of scope to ng-view
+            $scope.$apply();
+
+            //focus on the new form field
+            $timeout( $('#kr_title').focus(), 2000);
+
+            console.log($scope.okr_array);
         }
 
 
         $scope.saveOKR = function(){
             alert($scope.form1.year + " " + $scope.form1.semester.value);
+
+            $http({
+                url: "api/save_semester",
+                method: 'POST',
+                data: { 'year': $scope.form1.year, 'name' :  $scope.form1.semester.name , 'value':  $scope.form1.semester.value},
+                headers: { "Content-Type": "application/json" }
+            }).then(function(response){
+
+                console.log(response);
+            });
         };
+
+
+        /* ===== handle key events ===== */
+
+
+        var $objective_title = $('input#objective_title');
+        var $objective_wins = $('input#objective_wins');
+
+        var $kr_title = $('input#kr_title');
+        var $kr_wins = $('input#kr_wins');
+
+
+        $objective_title.on('keydown', function(e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                if($objective_title.val() != "") {
+                    $scope.ok('objective_title', 11);
+                    $objective_wins.focus();
+                } else {
+                    alert ("Please define your objective title");
+                }
+            }
+        });
+
+        $objective_wins.on('keydown', function(e) {
+
+            if(e.which === 13) {
+                e.preventDefault();
+                if ($objective_wins.val() != "") {
+                    $scope.ok('objective_wins', 12);
+                    $('#next2').focus();
+                } else {
+                    alert("Please define the number of wins for your objective");
+                }
+
+            }
+        });
+
+        $('#next2').on('keydown', function(e){
+            if(e.which === 13){
+                $scope.next(2);
+                console.log("step2");
+                console.log($scope.step2);
+            }
+        });
+
+        $kr_title.on('keydown', function(e) {
+
+            if(e.which === 13) {
+                e.preventDefault();
+                if ($kr_title.val() != "") {
+                    $scope.ok('kr_title', 1);
+                    $kr_wins.focus();
+                } else {
+                    alert("Please define the title for your Key Result");
+                }
+
+            }
+        });
+
+
+        $kr_wins.on('keydown', function(e) {
+
+            if(e.which === 13) {
+                e.preventDefault();
+                if ($kr_wins.val() != "") {
+                    $scope.ok('kr_wins', 2);
+                    $('#add_kr_btn').focus();
+                } else {
+                    alert("Please define the number of wins for your Key Result");
+                }
+
+            }
+        });
+
+
+
+
     }]);
