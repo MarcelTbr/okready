@@ -51,4 +51,12 @@ app.controller('ManageSemestersController', ['$scope', '$http', '$location', '$i
         };
 
 
+        $scope.lastSemesterViewed = function(year, semester_index){
+
+            $rootScope.year = year;
+            $rootScope.semester_index = semester_index;
+        };
+
+
+
     }]);

@@ -50,7 +50,7 @@
         <li ng-if="user" ng-class="{active: $route.current.activetab == 'new'}"><a href="/new_semester">New Semester</a></li>
         <li ng-if="user" ng-class="{active: $route.current.activetab == 'okr'}"><a href="/new_okr">New OKR</a></li>
         <li ng-if="user" ng-class="{active: $route.current.activetab == 'manage'}"><a href="/manage_semesters">Manage Semesters</a></li>
-        <li ng-if="user" ng-class="{active: $route.current.activetab == 'semester'}"><a href="/view_semester/2018/1">View Semester</a></li>
+        <li ng-if="user" ng-class="{active: $route.current.activetab == 'semester'}"><a href="/view_semester/{{year}}/{{semester_index}}">View Semester</a></li>
       </ul>
       <form ng-if="!user" class="navbar-form navbar-right">
         <div class="form-group">

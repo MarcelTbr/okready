@@ -44,6 +44,13 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                 vm.password = "";
                 localStorage.setItem("open-okr-session", "yes");
 
+
+                //mockdata TODO: change with server fetched data
+                $rootScope.year = 2020;
+                $rootScope.semester_index = 9;
+                localStorage.setItem("year", 2020);
+                localStorage.setItem("semester-index", 9);
+
             });
 
 
@@ -61,6 +68,8 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                     vm.password = "";
 
                     localStorage.removeItem("open-okr-session");
+                    localStorage.removeItem("year");
+                    localStorage.removeItem("semester-index");
                     $window.location.href = "/";
                 });
              };

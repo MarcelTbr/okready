@@ -17,9 +17,14 @@
 .center {
     text-align: center;
 }
+
 .container-custom {
     margin-left: 5%;
     margin-right: 5%;
+}
+
+.navbar-primary .navbar-toggle .icon-bar {
+    background-color: dodgerblue !important;;
 }
 
 /* ===== New Semester ===== */
@@ -111,7 +116,88 @@
 
 
 
+/* ========== view semester ======== */
 
+#view_semester #okr_list{
+    margin: 0 auto;
+}
+
+#view_semester #okr_list  .kr_list li {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.kr-wins-detail {
+    display: flex;
+    justify-content: space-between;
+    background-color: whitesmoke;
+    border: 1px solid lightgrey;
+    position: relative;
+    top: -5px;
+    border-radius: 5px;
+    color: black;
+    padding: 5px;
+    box-shadow: 0 0 2px darkgrey;
+    font-size: 20px;
+}
+
+.kr-wins-detail span {
+    line-height: 34px;
+
+}
+
+.kr-wins-detail div {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.kr-wins-input {
+    width: 50px;
+    text-align: right;
+    background-color: whitesmoke;
+    border: none;
+}
+
+
+.toggle-kr-edit {
+    width: 34px;
+    height: 34px;
+    /*border: 1px solid red;*/
+    overflow: hidden;
+
+}
+
+.toggle-kart{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items:center;
+    position: relative;
+}
+
+.edit-kr {
+    font-size: 25px!important;
+    padding: 5px;
+    padding-top:0px;
+    color: orange;
+    position:relative;
+    top:5px;
+}
+
+
+.ok-kr {
+    font-size: 25px !important;
+    padding: 5px;
+    padding-top: 0px;
+    color: dodgerblue;
+    position:relative;
+    top: 5px;
+}
+
+.completion p {
+    font-size: 20px;
+    color: #777777;
+}
 
 /* ===== accordion ===== */
 

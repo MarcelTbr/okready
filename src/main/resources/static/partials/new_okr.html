@@ -52,15 +52,15 @@
 <aside id="okr_list" class="center">
     <h3>OKR LIST</h3>
     <div class="okr-item" ng-repeat="okr in okr_array">
-    <button class="accordion" ng-click="accToggle($index)"><b>{{okr.total_wins}}W | {{okr.title}}</b></button>
-    <div class="panel">
-      <ul class="kr_list">
-          <li ng-if="kr.title != undefined && kr.title != '' " ng-repeat="kr in okr.results" class="kr bg-primary text-white shadow rounded">
-              <span >{{kr.title}}</span>
-              <span>{{kr.wins_ratio}} Wins</span>
-          </li>
-      </ul>
-    </div>
+        <button class="accordion" ng-click="accToggle($index)"><b>{{okr.total_wins}}W | {{okr.title}}</b></button>
+        <div class="panel">
+          <ul class="kr_list">
+              <li ng-if="kr.title != undefined && kr.title != '' " ng-repeat="kr in okr.results" class="kr bg-primary text-white shadow rounded">
+                  <span >{{kr.title}}</span>
+                  <span>Wins {{kr.wins_ratio}}x</span>
+              </li>
+          </ul>
+        </div>
     </div>
     <button class="btn window-button btn-success" ng-click="saveOKR()" ng-show="save">Save</button>
 </aside>

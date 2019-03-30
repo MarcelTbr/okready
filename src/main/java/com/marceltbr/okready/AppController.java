@@ -46,6 +46,28 @@ public class AppController {
 
 
 
+            //$scope.semester = {
+            //            name: "1st",
+            //            okr_array: [],
+            //            value: 1
+
+            // $scope.okr_array = [
+            //     {   title: "something",
+            //         total_wins: 50,
+            //         results: [
+            //             {title: "something else", wins_ratio: 1, wins: 8},
+            //             {title: "something else", wins_ratio: 1, wins: 8}
+            //         ]
+            //     },
+            //     {   title: "something",
+            //         total_wins: 50,
+            //         results: [
+            //             {title: "something else", wins_ratio: 1, wins: 8},
+            //             {title: "something else", wins_ratio: 1, wins: 8}
+            //         ]
+            //     }];
+
+
             return new ResponseEntity<>(makeMap("success", "Year: " + year + " Semester: " + semester), HttpStatus.ACCEPTED);
 
 
@@ -140,15 +162,15 @@ public class AppController {
         //     {   title: "something",
         //         total_wins: 50,
         //         results: [
-        //             {title: "something else", wins_ratio: 1},
-        //             {title: "something else", wins_ratio: 1}
+        //             {title: "something else", wins_ratio: 1, wins: 8},
+        //             {title: "something else", wins_ratio: 1, wins: 8}
         //         ]
         //     },
         //     {   title: "something",
         //         total_wins: 50,
         //         results: [
-        //             {title: "something else", wins_ratio: 1},
-        //             {title: "something else", wins_ratio: 1}
+        //             {title: "something else", wins_ratio: 1, wins: 8},
+        //             {title: "something else", wins_ratio: 1, wins: 8}
         //         ]
         //     }];
 

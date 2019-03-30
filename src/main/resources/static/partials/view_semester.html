@@ -1,6 +1,45 @@
 <main id="view_semester" class="container">
 
-    <h3>View Semester</h3>
+    <h3 class="center">{{semester.name}} Semester of {{year}}</h3>
 
+
+
+    <section id="okr_list" class="center">
+        <h3>OKR LIST</h3>
+        <div ng-model="okr" class="okr-item" ng-repeat="okr in semester.okr_array" ng-init="$i_out = $index">
+            <button id="okr-{{$i_out}}" class="accordion" ng-click="accToggle($i_out)"><b>{{okr.total_wins}}W | {{okr.title}} </b>- <span ng-bind="calculateCompletion(okr)"></span></button>
+            <div class="panel">
+                <div class="completion">
+
+                    <p>Completion:<span ng-bind="calculateCompletion(okr)"></span></p>
+
+                </div>
+                <ul class="kr_list">
+                  <div  ng-if="kr.title != undefined && kr.title != '' " ng-repeat="kr in okr.results" ng-init="$i_in = $index">
+                      <li class="kr bg-primary text-white shadow rounded">
+                          <span >{{kr.title}}</span>
+                          <span>Wins {{kr.wins_ratio}}x </span>
+                      </li>
+                      <div class="kr-wins-detail">
+                        <span>Key Result Wins: {{kr.wins * kr.wins_ratio}}</span>
+                        <div>
+
+                            <input ng-model="kr.wins" type="number" id="kr-wins-{{$i_out}}{{$i_in}}" class="kr-wins-input" value="{{kr.wins}}" disabled>
+                            <span class="toggle-kr-edit">
+                                <div id="tgl-krt-{{$i_out}}{{$i_in}}" class="toggle-kart">
+                                    <i id="edit-kr-{{$i_out}}{{$i_in}}" class="edit-kr fa fa-edit" ng-click="edit_kr( $i_out , $i_in)"></i></input>
+                                    <i id="ok-kr-{{$i_out}}{{$i_in}}" class="ok-kr fa fa-check-square-o" ng-click="ok_kr($i_out , $i_in)"></i></input>
+                                </div>
+                            </span>
+                        </div>
+
+                        </div>
+                      </div>
+                  </div>
+                </ul>
+            </div>
+        </div>
+        <button class="btn window-button btn-success" ng-click="saveOKR()" ng-show="save">Save</button>
+    </section>
 
 </main>
