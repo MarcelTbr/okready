@@ -28,7 +28,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
         //     {   title: "something",
         //         total_wins: 50,
         //         results: [
-        //             {title: "something else", wins_ratio: 1},
+        //             {title: "something else", wins_ratio: 1, wins: 9},
         //             {title: "something else", wins_ratio: 1}
         //         ]
         //     },
@@ -243,13 +243,53 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
         }
 
 
+        /* ======= save objectives api call ======= */
+
         $scope.saveOKR = function(){
             alert($scope.form1.year + " " + $scope.form1.semester.value);
+
+
+            //delete undefined key results if any
+
+            function deleteEmptyKRs(okr_array){
+
+
+                for(var i = 0; i < okr_array.length; i++){
+
+                    var results = okr_array[i].results;
+                    for(var j = 0; j < results.length; j++){
+
+                        var result = results[j];
+
+                        if(result.title === undefined || result.title === ""){
+                            results.splice(j,1);
+                        }
+
+                    }
+
+                }
+
+                return okr_array;
+
+            }
+
+            $scope.okr_array = deleteEmptyKRs($scope.okr_array);
+
+
+            var semesterJSON = {
+                'year': $scope.form1.year,
+                'name' :  $scope.form1.semester.name,
+                'value':  $scope.form1.semester.value,
+                'okr_array': $scope.okr_array
+            };
+
+            console.info('save okr_array', $scope.okr_array);
+
 
             $http({
                 url: "api/save_semester",
                 method: 'POST',
-                data: { 'year': $scope.form1.year, 'name' :  $scope.form1.semester.name , 'value':  $scope.form1.semester.value},
+                data: semesterJSON,
                 headers: { "Content-Type": "application/json" }
             }).then(function(response){
 

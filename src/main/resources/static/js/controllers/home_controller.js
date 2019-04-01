@@ -24,6 +24,23 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
 
         checkSession();
 
+
+        function lastViewedSemester() {
+
+            var year = localStorage.getItem("year");
+            var semester_index = localStorage.getItem("semester-index");
+
+            if( year !== null && semester_index !== null){
+
+                $rootScope.year = localStorage.getItem("year");
+                $rootScope.semester_index = localStorage.getItem("semester-index");
+
+            }
+
+        }
+
+        lastViewedSemester();
+
         vm.LogmeIn = function() {
 
             /**
@@ -51,6 +68,10 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                 localStorage.setItem("year", 2020);
                 localStorage.setItem("semester-index", 9);
 
+
+                //redirect
+                $window.location.href = "/view_semester/"+$rootScope.year + "/" + $rootScope.semester_index;
+
             });
 
 
@@ -70,7 +91,7 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                     localStorage.removeItem("open-okr-session");
                     localStorage.removeItem("year");
                     localStorage.removeItem("semester-index");
-                    $window.location.href = "/";
+                    $window.location.href = "/home";
                 });
              };
 

@@ -1,12 +1,16 @@
 package com.marceltbr.okready;
 
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.marceltbr.okready.entities.Objective;
 import com.marceltbr.okready.entities.Semester;
 import com.marceltbr.okready.entities.Year;
 import com.marceltbr.okready.entities.YearSemester;
 import com.marceltbr.okready.repositories.SemesterRepository;
 import com.marceltbr.okready.repositories.YearRepository;
 import com.marceltbr.okready.repositories.YearSemesterRepository;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -92,21 +96,77 @@ public class AppController {
             Long value = json.getLong("value");
             String name = json.getString("name");
 
-            List<Year> yearList =  yearRepo.findByYear(yearNum);
-            Year year = null;
-            if(!yearList.isEmpty()){
-                year = yearList.get(0);
-            } else{
-                year = new Year(yearNum); yearRepo.save(year);
+            // turn a javascript object into an ArrayList
+            ArrayList<Map<String,Object>> okrArrayList = makeOKRArrayList(json);
+
+                //print out again to double-check
+                okrArrayList.stream().forEach(objective -> {
+
+                        System.out.print(objective.get("title") + " ");
+                        System.out.print("Total Wins: " + objective.get("total_wins"));
+                        System.out.println(objective.get("results").toString());
+
+
+                        }
+
+
+                );
+
+            List<Semester> semesterList = semesterRepo.findByValue(value);
+
+
+            Semester semester = null;
+
+            if(semesterList != null){
+
+                //semester exists
+
+                // get the semester of the given year from the list
+                List<Semester> foundSemesterList = semesterList.stream().filter(s -> Objects.equals(s.getYearSemester().getYear().getYear(), yearNum))
+                        .collect(Collectors.toList());
+
+
+                if(foundSemesterList.size() > 0){
+
+                    //find out wether year is already defined for that semester
+                    Optional<Year> yearOptional = yearRepo.findByYearSemestersLike(foundSemesterList.get(0).getYearSemester());
+
+                    long yearFound = yearOptional.get().getYear();
+
+                    System.out.println("year found: " + yearFound);
+                    System.out.println("year saving: " + yearNum);
+
+                    if(Objects.equals(yearFound, yearNum)){
+
+                        //year and semester already there
+                        return new ResponseEntity<>(makeMap("error", "Semester already there"), HttpStatus.CONFLICT);
+
+
+                    } else {
+                        //semester exists but not from the same year
+
+                        saveYearAndSemester(yearNum, value, name);
+
+                        return new ResponseEntity<>(makeMap("success", "Semester Saved"), HttpStatus.ACCEPTED);
+                    }
+
+                } else {
+
+                    //year is not already there
+
+                    saveYearAndSemester(yearNum, value, name);
+
+                    return new ResponseEntity<>(makeMap("success", "Semester Saved"), HttpStatus.ACCEPTED);
+                }
+
+            } else {
+
+                //semester doesn't exist
+
+                saveYearAndSemester(yearNum, value, name);
+
+                return new ResponseEntity<>(makeMap("success", "Semester Saved"), HttpStatus.ACCEPTED);
             }
-
-            Semester semester = new Semester(value, name); semesterRepo.save(semester);
-
-
-            YearSemester yearSemester = new YearSemester(year, semester);
-            yearSemesterRepo.save(yearSemester);
-
-            return new ResponseEntity<>(makeMap("success", "Semester Saved"), HttpStatus.ACCEPTED);
 
 
         }else {
@@ -114,6 +174,65 @@ public class AppController {
             return new ResponseEntity<>(makeMap("error", "User not authenticated"), HttpStatus.FORBIDDEN);
         }
 
+    }
+
+    private ArrayList<Map<String, Object>> makeOKRArrayList(JSONObject json) {
+        JSONArray okr_array = json.getJSONArray("okr_array");
+
+        Iterator okrArrayIterator = okr_array.iterator();
+
+
+        ArrayList<Map<String,Object>> okrArrayList = new ArrayList<>();
+
+        while(okrArrayIterator.hasNext()){
+
+            Object objective = okrArrayIterator.next();
+
+                System.out.println(objective.toString());
+
+            Gson gson = new Gson();
+            //make objective map
+            Map<String, Object> objectiveMap = gson.fromJson(objective.toString(), new TypeToken<Map<String, Object>>(){}.getType());
+
+            //make results array and put 0 wins as default (when saving new semester)
+            String resultsJson = objectiveMap.get("results").toString();
+            ArrayList<Map<String,Object>> resultsArrayList = gson.fromJson(resultsJson, new TypeToken<ArrayList<Map<String,Object>>>(){}.getType());
+            resultsArrayList.forEach(res -> {
+                res.put("wins", 0);
+            });
+                resultsArrayList.forEach(x -> System.out.println(x));
+
+            //put results ArrayList into it's objective Map
+            objectiveMap.put("results", resultsArrayList);
+
+                objectiveMap.forEach((x,y)-> System.out.println("key : " + x + " , value : " + y));
+
+            // add eat objective Map to the okr Array List
+            okrArrayList.add(objectiveMap);
+
+
+        }
+
+        return okrArrayList;
+    }
+
+    private void saveYearAndSemester(Long yearNum, Long value, String name) {
+        Semester semester;
+        semester =  new Semester(value, name);
+        semesterRepo.save(semester);
+
+        List<Year> yearList =  yearRepo.findByYear(yearNum);
+        Year year = null;
+        if(!yearList.isEmpty()){
+            //if year exists, get it
+            year = yearList.get(0);
+        } else{
+            //otherwise create and save it
+            year = new Year(yearNum); yearRepo.save(year);
+        }
+
+        YearSemester yearSemester = new YearSemester(year, semester);
+        yearSemesterRepo.save(yearSemester);
     }
 
     @RequestMapping("get_semesters")

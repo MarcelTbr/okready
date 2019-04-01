@@ -2,9 +2,12 @@
 
 var app = angular.module('App', [ 'ngRoute', 'ui.router']); //'pascalprecht.translate', 'languageModule'
 
-app.config(['$routeProvider', '$locationProvider', '$stateProvider', '$urlRouterProvider', function($routeProvider, $locationProvider){
+app.config(['$routeProvider', '$locationProvider', '$stateProvider', '$urlRouterProvider', function($routeProvider, $locationProvider) {
 
-    $routeProvider.when('/home',{
+    $routeProvider.when('/',{
+        templateUrl:'partials/home.html',
+        activetab: 'home'
+    }).when('/home',{
         templateUrl:'partials/home.html',
         activetab: 'home'
     }).when('/new_semester', {
@@ -23,10 +26,12 @@ app.config(['$routeProvider', '$locationProvider', '$stateProvider', '$urlRouter
         templateUrl: 'partials/view_semester.html',
         controller: 'ViewSemesterController',
         activetab: "semester"
-    })
+    }).when('/session_expired', {
+        templateUrl: 'partials/session_expired.html'
+    });
 
 
-    $routeProvider.otherwise({redirectTo:'/home'});
+    $routeProvider.otherwise({redirectTo:'/session_expired'});
 
 
     $locationProvider.html5Mode({

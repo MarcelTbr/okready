@@ -5,7 +5,7 @@
          <button class="accordion" ng-click="accToggle($index)"><b>{{year.year}}</b></button>
             <div class="panel">
               <ul class="kr_list">
-                  <a href="/view_semester/{{year.year}}/{{semester.value}}" ng-repeat="semester in year.semesters" ng-click="lastSemesterViewed(year.year, semester.value)">
+                  <a href="/view_semester/{{year.year}}/{{semester.value}}" ng-repeat="semester in year.semesters | orderBy: 'value'" ng-click="lastSemesterViewed(year.year, semester.value)">
                       <li  class="kr bg-primary text-white shadow rounded">
                           <span>{{semester.name}}</span>
 

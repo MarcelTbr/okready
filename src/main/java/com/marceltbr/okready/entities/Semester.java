@@ -14,8 +14,8 @@ public class Semester {
     private long value;
     private String name;
 
-    @OneToMany(mappedBy="semester", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<YearSemester> yearSemesters;
+    @OneToOne(mappedBy="semester", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    private YearSemester yearSemesters;
 
     public Semester(){}
 
@@ -34,5 +34,9 @@ public class Semester {
 
     public String getName() {
         return name;
+    }
+
+    public YearSemester getYearSemester() {
+        return yearSemesters;
     }
 }

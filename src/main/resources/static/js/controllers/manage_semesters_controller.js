@@ -55,6 +55,8 @@ app.controller('ManageSemestersController', ['$scope', '$http', '$location', '$i
 
             $rootScope.year = year;
             $rootScope.semester_index = semester_index;
+            localStorage.setItem("year", year);
+            localStorage.setItem("semester-index", semester_index);
         };
 
 

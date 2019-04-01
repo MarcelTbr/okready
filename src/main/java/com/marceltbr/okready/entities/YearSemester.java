@@ -13,7 +13,7 @@ public class YearSemester {
     @JoinColumn(name="year_id")
     private Year year;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="semester_id")
     private Semester semester;
 

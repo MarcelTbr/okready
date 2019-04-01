@@ -8,6 +8,7 @@ import com.marceltbr.okready.repositories.AppUserRepository;
 import com.marceltbr.okready.repositories.SemesterRepository;
 import com.marceltbr.okready.repositories.YearRepository;
 import com.marceltbr.okready.repositories.YearSemesterRepository;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -22,23 +23,31 @@ import org.springframework.security.config.annotation.authentication.configurers
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-
+import java.util.logging.Logger;
 
 
 @SpringBootApplication
@@ -143,7 +152,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.authorizeRequests()
 				.antMatchers("/", "/index.html", "/app/login", "/app/logout", "/js/**", "/img/**", "/css/**",
-						"/bower_components/**", "/home", "/partials/home.html").permitAll()
+						"/bower_components/**", "/home", "/partials/home.html", "/session_expired", "/partials/session_expired.html").permitAll()
 				.antMatchers("/**", "/partials/**", "/api/**").hasAnyAuthority("USER")
 				.anyRequest().fullyAuthenticated();
 
@@ -151,17 +160,31 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.formLogin()
 				.loginPage("/app/login");
 
+
                 /*.anyRequest().fullyAuthenticated().
                 and().httpBasic();*/
 
+
 		http.logout().logoutUrl("/app/logout");
+
+
+		http.exceptionHandling().accessDeniedPage("/");
+
+		//redirect to page when session expired
+		http.sessionManagement()
+		.maximumSessions(1).expiredUrl("/session_expired");
+				//.and().invalidSessionUrl("/session_expired");
 
 
 		// turn off checking for CSRF tokens
 		http.csrf().disable();
 
-		// if user is not authenticated, just send an authentication failure response
-		http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+		//let the front end handle this situation
+			// if user is not authenticated, just send an authentication failure response
+			//http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+
 
 		// if login is successful, just clear the flags asking for authentication
 		http.formLogin().successHandler((req, res, auth) -> clearAuthenticationAttributes(req));
