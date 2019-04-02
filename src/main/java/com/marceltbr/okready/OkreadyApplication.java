@@ -8,7 +8,7 @@ import com.marceltbr.okready.repositories.AppUserRepository;
 import com.marceltbr.okready.repositories.SemesterRepository;
 import com.marceltbr.okready.repositories.YearRepository;
 import com.marceltbr.okready.repositories.YearSemesterRepository;
-import org.slf4j.LoggerFactory;
+import org.h2.tools.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -53,6 +54,16 @@ import java.util.logging.Logger;
 @SpringBootApplication
 public class OkreadyApplication extends WebMvcConfigurerAdapter{
 
+	/**
+	 * Start internal H2 server so we can query the DB from IDE
+	 *
+	 * @return H2 Server instance
+	 * @throws SQLException
+	 */
+	@Bean(initMethod = "start", destroyMethod = "stop")
+	public Server h2Server() throws SQLException {
+		return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092");
+	}
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {

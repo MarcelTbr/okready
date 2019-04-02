@@ -1,5 +1,7 @@
 package com.marceltbr.okready.entities;
 
+import org.springframework.data.repository.cdi.Eager;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -15,7 +17,10 @@ public class Semester {
     private String name;
 
     @OneToOne(mappedBy="semester", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-    private YearSemester yearSemesters;
+    private YearSemester yearSemester;
+
+    @OneToMany(mappedBy="semester", fetch= FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<SemesterObjective> semesterObjectives;
 
     public Semester(){}
 
@@ -37,6 +42,22 @@ public class Semester {
     }
 
     public YearSemester getYearSemester() {
-        return yearSemesters;
+        return yearSemester;
+    }
+
+    public YearSemester getYearSemesters() {
+        return yearSemester;
+    }
+
+    public void setYearSemesters(YearSemester yearSemester) {
+        this.yearSemester = yearSemester;
+    }
+
+    public Set<SemesterObjective> getSemesterObjective() {
+        return semesterObjectives;
+    }
+
+    public void setSemesterObjectives(Set<SemesterObjective> semesterObjectives) {
+        this.semesterObjectives = semesterObjectives;
     }
 }

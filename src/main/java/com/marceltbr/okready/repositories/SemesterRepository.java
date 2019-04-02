@@ -13,5 +13,5 @@ import java.util.Optional;
 public interface SemesterRepository extends JpaRepository<Semester, Long> {
     Semester findById(long id);
 
-   List<Semester> findByValue(long value);
+    List<Semester> findByValue(long value);
 }

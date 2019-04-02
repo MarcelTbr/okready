@@ -1,9 +1,8 @@
 package com.marceltbr.okready.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.hibernate.validator.constraints.Length;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 
 @Entity
@@ -12,14 +11,20 @@ public class Objective {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="objective_id")
     long id;
 
-
+    @Column(length = 5000)
     ArrayList<Object> results;
 
     String title;
 
     long total_wins;
+
+    @OneToOne(mappedBy="objective", fetch = FetchType.EAGER)
+    @JoinColumn( name="semester_objective_id")
+    private SemesterObjective semesterObjective;
+
 
     public Objective () {}
 
@@ -27,6 +32,13 @@ public class Objective {
         this.results = results;
         this.title = title;
         this.total_wins = total_wins;
+    }
+
+    public Objective(ArrayList<Object> results, String title, long total_wins, SemesterObjective semesterObjective) {
+        this.results = results;
+        this.title = title;
+        this.total_wins = total_wins;
+        this.semesterObjective = semesterObjective;
     }
 
     public ArrayList<Object> getResults() {

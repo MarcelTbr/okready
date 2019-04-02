@@ -2,14 +2,12 @@ package com.marceltbr.okready;
 
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.marceltbr.okready.entities.Objective;
-import com.marceltbr.okready.entities.Semester;
-import com.marceltbr.okready.entities.Year;
-import com.marceltbr.okready.entities.YearSemester;
-import com.marceltbr.okready.repositories.SemesterRepository;
-import com.marceltbr.okready.repositories.YearRepository;
-import com.marceltbr.okready.repositories.YearSemesterRepository;
+import com.marceltbr.okready.entities.*;
+import com.marceltbr.okready.repositories.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,6 +32,12 @@ public class AppController {
 
     @Autowired
     private SemesterRepository semesterRepo;
+
+    @Autowired
+    private ObjectiveRepository objectiveRepo;
+
+    @Autowired
+    private SemesterObjectiveRepository semesterObjectiveRepo;
 
 
 
@@ -96,21 +101,7 @@ public class AppController {
             Long value = json.getLong("value");
             String name = json.getString("name");
 
-            // turn a javascript object into an ArrayList
-            ArrayList<Map<String,Object>> okrArrayList = makeOKRArrayList(json);
 
-                //print out again to double-check
-                okrArrayList.stream().forEach(objective -> {
-
-                        System.out.print(objective.get("title") + " ");
-                        System.out.print("Total Wins: " + objective.get("total_wins"));
-                        System.out.println(objective.get("results").toString());
-
-
-                        }
-
-
-                );
 
             List<Semester> semesterList = semesterRepo.findByValue(value);
 
@@ -145,7 +136,7 @@ public class AppController {
                     } else {
                         //semester exists but not from the same year
 
-                        saveYearAndSemester(yearNum, value, name);
+                        saveYearAndSemester(yearNum, value, name, json);
 
                         return new ResponseEntity<>(makeMap("success", "Semester Saved"), HttpStatus.ACCEPTED);
                     }
@@ -154,7 +145,7 @@ public class AppController {
 
                     //year is not already there
 
-                    saveYearAndSemester(yearNum, value, name);
+                    saveYearAndSemester(yearNum, value, name, json);
 
                     return new ResponseEntity<>(makeMap("success", "Semester Saved"), HttpStatus.ACCEPTED);
                 }
@@ -163,7 +154,7 @@ public class AppController {
 
                 //semester doesn't exist
 
-                saveYearAndSemester(yearNum, value, name);
+                saveYearAndSemester(yearNum, value, name, json);
 
                 return new ResponseEntity<>(makeMap("success", "Semester Saved"), HttpStatus.ACCEPTED);
             }
@@ -188,24 +179,34 @@ public class AppController {
 
             Object objective = okrArrayIterator.next();
 
-                System.out.println(objective.toString());
+                //System.out.println(objective.toString());
 
             Gson gson = new Gson();
             //make objective map
             Map<String, Object> objectiveMap = gson.fromJson(objective.toString(), new TypeToken<Map<String, Object>>(){}.getType());
 
             //make results array and put 0 wins as default (when saving new semester)
-            String resultsJson = objectiveMap.get("results").toString();
-            ArrayList<Map<String,Object>> resultsArrayList = gson.fromJson(resultsJson, new TypeToken<ArrayList<Map<String,Object>>>(){}.getType());
-            resultsArrayList.forEach(res -> {
-                res.put("wins", 0);
-            });
-                resultsArrayList.forEach(x -> System.out.println(x));
+
+            JsonArray newJsonArray = gson.toJsonTree(objectiveMap.get("results")).getAsJsonArray();
+
+            Iterator resultsIterator = newJsonArray.iterator();
+
+            ArrayList<Map<String, Object>> resultsArrayList = new ArrayList<>();
+            while(resultsIterator.hasNext()){
+
+                Object result = resultsIterator.next();
+                Map<String, Object> resultMap = gson.fromJson(result.toString(), new TypeToken<Map<String, Object>>(){}.getType());
+                resultMap.put("wins", 0);
+
+                resultsArrayList.add(resultMap);
+            }
+
+                //resultsArrayList.forEach(x -> System.out.println(x));
 
             //put results ArrayList into it's objective Map
             objectiveMap.put("results", resultsArrayList);
 
-                objectiveMap.forEach((x,y)-> System.out.println("key : " + x + " , value : " + y));
+                //objectiveMap.forEach((x,y)-> System.out.println("key : " + x + " , value : " + y));
 
             // add eat objective Map to the okr Array List
             okrArrayList.add(objectiveMap);
@@ -216,10 +217,40 @@ public class AppController {
         return okrArrayList;
     }
 
-    private void saveYearAndSemester(Long yearNum, Long value, String name) {
+    private void saveYearAndSemester(Long yearNum, Long value, String name, JSONObject json ) {
+
+        // turn a javascript object into an ArrayList
+        ArrayList<Map<String,Object>> okrArrayList = makeOKRArrayList(json);
+
+                //print out again to double-check
+                okrArrayList.stream().forEach(objective -> {
+
+                            System.out.print(objective.get("title") + " ");
+                            System.out.print("Total Wins: " + objective.get("total_wins"));
+                            System.out.println(objective.get("results").toString());
+                        }
+                );
+
+        //create and save semester
         Semester semester;
         semester =  new Semester(value, name);
         semesterRepo.save(semester);
+
+        //loop objectives and save to semester
+        okrArrayList.stream().forEachOrdered(objv -> {
+
+            Objective objective = new Objective();
+            objective.setTitle(objv.get("title").toString());
+            objective.setTotal_wins(new Double((Double)objv.get("total_wins")).longValue());
+
+            ArrayList resultsArrayList = (ArrayList) objv.get("results");
+
+            objective.setResults(resultsArrayList);
+            objectiveRepo.save(objective);
+            SemesterObjective semesterObjective = new SemesterObjective(semester, objective);
+            semesterObjectiveRepo.save(semesterObjective);
+        });
+
 
         List<Year> yearList =  yearRepo.findByYear(yearNum);
         Year year = null;

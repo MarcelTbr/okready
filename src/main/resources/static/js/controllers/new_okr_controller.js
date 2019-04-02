@@ -6,7 +6,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
         function addClass(el, className) {
             if (el.classList)
                 el.classList.add(className)
-            else if (!hasClass(el, className)) el.className += " " + className
+            else if (!hasClass(el, className)) el.className += " " + className;
         }
 
         $scope.curr_okr = 0;
@@ -54,7 +54,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
             $timeout(function() {
 
                 if($scope.step1) {
-                    $('#objective_title').focus()
+                    $('#objective_title').focus();
                 }
 
             }, 2500);
@@ -67,6 +67,10 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                 case 0: $scope.step1 = false; $scope.step2 = false; $scope.step3 = false;
                     $("#new_f1, #new_f2").css("backgroundColor", "white");
                     $("#next2").attr("disabled",false);
+
+                    //reset fields
+                    $scope.form2.obj_title = "";
+                    $scope.form2.obj_wins = "";
                     $scope.okr_array = []; break;
                 case 1: $scope.step2 = false; $scope.step3 = false;
                     $("#new_f2").css("backgroundColor", "white");
@@ -79,6 +83,8 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                     if($scope.okr_array.length >0){
                         $scope.okr_array.pop();
                     }
+                    $scope.stopDigest = true;
+
                     break;
                 case 2:
 
@@ -93,8 +99,8 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
 
         $scope.next = function(step){
 
-            var cond1 = $("#objective_title").attr("disabled") != undefined;
-            var cond2 = $("#objective_wins").attr("disabled") != undefined;
+            var cond1 = $("#objective_title").attr("disabled") !== undefined;
+            var cond2 = $("#objective_wins").attr("disabled") !== undefined;
 
             switch(step){
                 case 2:
@@ -104,7 +110,20 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                         $scope.step2 = true;
                         $("#new_f2").css("backgroundColor", "lightgrey");
                         $("#fs_1").attr("disabled", true);
+
+                        $("#caroussel").animate({
+                            scrollTop: "400px"
+                        }, 2000);
+
+                        //focus on the new form field
+
+                        $scope.$apply();
+
+                        $timeout(function(){$('input#kr_title').focus();}, 0);
+
                         step2();
+
+
 
 
                     } else{
@@ -114,27 +133,38 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                    break;
                 case 3:
                     var kr = {};
-                    kr.title = $scope.form3.kr_title;
-                    kr.wins_ratio = $scope.form3.kr_wins;
-                    var kr_array = $scope.okr_array[$scope.curr_okr].results;
-                    if(kr_array.length <5) {
-                        $scope.okr_array[$scope.curr_okr].results.push(kr);
-                        $scope.accOpen($scope.curr_okr);
-                        $scope.form3.kr_title = "";
-                        $scope.form3.kr_wins = "";
-                        $scope.step3 = true;
+                    var kr_array = [];
 
-                        // reset key results title and wins input fields
-                        $scope.not("kr_title", 1);
-                        $scope.not("kr_wins", 2);
+                    console.log($scope.form3.kr_title);
+                    console.log($scope.form3.kr_wins);
 
-                        //focus on okr title input field
-                        $timeout( $('#kr_title').focus(), 2000);
+                    //to avoid user entering through keyboard causing an extra empty kr_array element
+                    if($scope.form3.kr_title !== undefined && $scope.form3.kr_title !== "") {
+                        kr.title = $scope.form3.kr_title;
+                        kr.wins_ratio = $scope.form3.kr_wins;
+                        kr_array = $scope.okr_array[$scope.curr_okr].results;
 
-                    } else{
-                        alert("Sorry it's better to have only a handful of key results."
-                        + "\n You can now save your objective");
+                        //be sure to enter 5 key results or less
+                        if(kr_array.length <5) {
+                            $scope.okr_array[$scope.curr_okr].results.push(kr);
+                            $scope.accOpen($scope.curr_okr);
+                            $scope.form3.kr_title = "";
+                            $scope.form3.kr_wins = "";
+                            $scope.step3 = true;
+
+                            // reset key results title and wins input fields
+                            $scope.not("kr_title", 1);
+                            $scope.not("kr_wins", 2);
+
+                            //focus on okr title input field
+                            $timeout( $('#kr_title').focus(), 1000);
+
+                        } else{
+                            alert("Sorry it's better to have only a handful of key results."
+                                + "\n You can now save your objective");
+                        }
                     }
+
                     break;
                 case 4:
 
@@ -171,7 +201,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
 
             var $elem = $('#'+id);
 
-            if($elem.val() != "") {
+            if($elem.val() !== "") {
                 $("#" + id).attr("disabled", true);
                 $("#ok" + num).css("display", "none");
                 $("#not" + num).css("visibility", "visible");
@@ -219,27 +249,25 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
 
         function step2(){
 
-            var okr_obj = {};
-            okr_obj.title = $scope.form2.obj_title;
-            okr_obj.total_wins = $scope.form2.obj_wins;
+                var okr_obj = {};
+                okr_obj.title = $scope.form2.obj_title;
+                okr_obj.total_wins = $scope.form2.obj_wins;
 
-            console.log(okr_obj);
-            okr_obj.results = [];
-            $scope.okr_array.push(okr_obj);
-            if($scope.okr_array.length > 0){
-                $scope.save = true;
-            }
-            $("#caroussel").animate({
-                scrollTop: "400px"
-            }, 2000);
+                console.log(okr_obj);
+                okr_obj.results = [];
 
-            //apply change of scope to ng-view
-            $scope.$apply();
 
-            //focus on the new form field
-            $timeout( $('#kr_title').focus(), 2000);
+                $scope.okr_array.push(okr_obj);
 
-            console.log($scope.okr_array);
+
+                if($scope.okr_array.length > 0){
+
+                    $scope.save = true;
+                }
+
+                console.log($scope.okr_array);
+
+
         }
 
 
@@ -294,6 +322,18 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
             }).then(function(response){
 
                 console.log(response);
+
+
+                $rootScope.year = $scope.form1.year;
+                $rootScope.semester_index = $scope.form1.semester.value;
+                localStorage.setItem("year", $rootScope.year);
+                localStorage.setItem("semester-index", $rootScope.semester_index);
+
+                $location.path( "/view_semester/" + $rootScope.year + "/" + $rootScope.semester_index);
+
+            }, function(error){
+
+                console.log(error);
             });
         };
 
@@ -335,6 +375,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
         });
 
         $('#next2').on('keydown', function(e){
+            e.preventDefault();
             if(e.which === 13){
                 $scope.next(2);
                 console.log("step2");
@@ -346,7 +387,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
 
             if(e.which === 13) {
                 e.preventDefault();
-                if ($kr_title.val() != "") {
+                if ($kr_title.val() !== "") {
                     $scope.ok('kr_title', 1);
                     $kr_wins.focus();
                 } else {
