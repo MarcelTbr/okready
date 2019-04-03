@@ -7,7 +7,7 @@
     <section id="okr_list" class="center">
         <h3>OKR LIST</h3>
         <div ng-model="okr" class="okr-item" ng-repeat="okr in semester.okr_array" ng-init="$i_out = $index">
-            <button id="okr-{{$i_out}}" class="accordion" ng-click="accToggle($i_out)"><b>{{okr.total_wins}}W | {{okr.title}} </b>- <span ng-bind="calculateCompletion(okr)"></span></button>
+            <button id="okr-{{$i_out}}" class="accordion" ng-click="accToggle($i_out)"><b>{{okr.total_wins}}W | {{okr.title}} </b>: <span ng-bind="calculateCompletion(okr)"></span></button>
             <div class="panel">
                 <div class="completion">
 
@@ -18,10 +18,10 @@
                   <div  ng-if="kr.title != undefined && kr.title != '' " ng-repeat="kr in okr.results" ng-init="$i_in = $index">
                       <li class="kr bg-primary text-white shadow rounded">
                           <span >{{kr.title}}</span>
-                          <span>Wins {{kr.wins_ratio}}x </span>
+                          <span>Wins {{kr.winsRatio}}x </span>
                       </li>
                       <div class="kr-wins-detail">
-                        <span>Key Result Wins: {{kr.wins * kr.wins_ratio}}</span>
+                        <span>Key Result Wins: {{kr.wins * kr.winsRatio}}</span>
                         <div>
 
                             <input ng-model="kr.wins" type="number" id="kr-wins-{{$i_out}}{{$i_in}}" class="kr-wins-input" value="{{kr.wins}}" disabled>

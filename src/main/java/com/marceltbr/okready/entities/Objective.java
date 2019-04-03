@@ -3,7 +3,9 @@ package com.marceltbr.okready.entities;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Set;
 
 @Entity
 public class Objective {
@@ -14,8 +16,6 @@ public class Objective {
     @Column(name="objective_id")
     long id;
 
-    @Column(length = 5000)
-    ArrayList<Object> results;
 
     String title;
 
@@ -26,27 +26,14 @@ public class Objective {
     private SemesterObjective semesterObjective;
 
 
+    @OneToMany(mappedBy = "objective", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<ObjectiveResult> objectiveResults;
+
     public Objective () {}
 
-    public Objective(ArrayList<Object> results, String title, long total_wins) {
-        this.results = results;
+    public Objective(String title, long total_wins) {
         this.title = title;
         this.total_wins = total_wins;
-    }
-
-    public Objective(ArrayList<Object> results, String title, long total_wins, SemesterObjective semesterObjective) {
-        this.results = results;
-        this.title = title;
-        this.total_wins = total_wins;
-        this.semesterObjective = semesterObjective;
-    }
-
-    public ArrayList<Object> getResults() {
-        return results;
-    }
-
-    public void setResults(ArrayList<Object> results) {
-        this.results = results;
     }
 
     public String getTitle() {
@@ -63,5 +50,9 @@ public class Objective {
 
     public void setTotal_wins(long total_wins) {
         this.total_wins = total_wins;
+    }
+
+    public Set<ObjectiveResult> getObjectiveResults() {
+        return objectiveResults;
     }
 }

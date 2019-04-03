@@ -29,26 +29,15 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
         //         ]
         //     }];
 
-        $http.get("api/get_semesters")
-            .then(function(response){
-
-                $scope.year = $rootScope.year; //response.data.yearsDTO[0].year;
-
-                $scope.semester = response.data.yearsDTO[0].semesters[0];
-
-                //console.log($scope.year);
-                console.log($scope.semester);
-
-            });
-
-
 
      //get semesters, temporary mockup data
-    $http.get("api/get_semester/"+ $routeParams.year + "/" + $routeParams.semester)
+    $http.get("api/get_semester/"+ $routeParams.year + "/" + $routeParams.semester_value)
         .then(function(response){
 
             console.log("api/get_semester...");
             console.log(response.data);
+
+            $scope.semester = response.data.semesterDTO;
 
         },function(error){
             alert("There was an error");
@@ -109,12 +98,12 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
                     var result = results[j];
 
 
-                    actual_wins += result.wins_ratio * result.wins;
+                    actual_wins += result.winsRatio * result.wins;
                 }
 
 
 
-            return (actual_wins * 100 / total_wins) + " %";
+            return Math.round(actual_wins * 100 / total_wins) + " %";
         };
 
 

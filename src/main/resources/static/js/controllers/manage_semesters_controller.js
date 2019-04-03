@@ -42,12 +42,12 @@ app.controller('ManageSemestersController', ['$scope', '$http', '$location', '$i
                     var result = results[j];
 
 
-                    actual_wins += result.wins_ratio * result.wins;
+                    actual_wins += result.winsRatio * result.wins;
                 }
 
             }
 
-            return (actual_wins * 100 / total_wins) + " %";
+            return Math.round(actual_wins * 100 / total_wins) + " %";
         };
 
 

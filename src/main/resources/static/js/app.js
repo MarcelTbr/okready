@@ -22,7 +22,7 @@ app.config(['$routeProvider', '$locationProvider', '$stateProvider', '$urlRouter
         templateUrl: 'partials/new_okr.html',
         controller: 'NewOkrController',
         activetab: 'new_okr'
-    }).when('/view_semester/:year/:semester', {
+    }).when('/view_semester/:year/:semester_value', {
         templateUrl: 'partials/view_semester.html',
         controller: 'ViewSemesterController',
         activetab: "semester"

@@ -1,13 +1,7 @@
 package com.marceltbr.okready;
 
-import com.marceltbr.okready.entities.AppUser;
-import com.marceltbr.okready.entities.Semester;
-import com.marceltbr.okready.entities.Year;
-import com.marceltbr.okready.entities.YearSemester;
-import com.marceltbr.okready.repositories.AppUserRepository;
-import com.marceltbr.okready.repositories.SemesterRepository;
-import com.marceltbr.okready.repositories.YearRepository;
-import com.marceltbr.okready.repositories.YearSemesterRepository;
+import com.marceltbr.okready.entities.*;
+import com.marceltbr.okready.repositories.*;
 import org.h2.tools.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -46,6 +40,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -96,7 +92,9 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 
 	@Bean
 	public CommandLineRunner initData(AppUserRepository appUserRepository, YearRepository yearRepository,
-									  YearSemesterRepository yearSemesterRepository, SemesterRepository semesterRepository) {
+									  YearSemesterRepository yearSemesterRepository, SemesterRepository semesterRepository,
+									  ObjectiveRepository objectiveRepo, SemesterObjectiveRepository semesterObjectiveRepo,
+									  ResultRepository resultRepo, ObjectiveResultRepository objectiveResultRepo) {
 
 		return (args) -> {
 
@@ -110,6 +108,29 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 			semesterRepository.save(sem1);
 			YearSemester yearSemester = new YearSemester(year, sem1);
 			yearSemesterRepository.save(yearSemester);
+
+			//create objective
+			Objective objective1 = new Objective("Do Sport", 150L);
+			objectiveRepo.save(objective1);
+
+			//create semesterObjectives
+			SemesterObjective semObj1 = new SemesterObjective(sem1, objective1);
+			semesterObjectiveRepo.save(semObj1);
+
+			//create results
+			Result result1 = new Result("Go Swimming", 10L, 1L);
+			Result result2 = new Result("Go Jogging", 20L, 2L);
+
+			resultRepo.save(result1); resultRepo.save(result2);
+
+			//create objectiveResults
+
+			ObjectiveResult objRes1 = new ObjectiveResult(objective1, result1);
+			ObjectiveResult objRes2 = new ObjectiveResult(objective1, result2);
+
+			objectiveResultRepo.save(objRes1);objectiveResultRepo.save(objRes2);
+
+
 		};
 	}
 }

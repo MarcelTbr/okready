@@ -63,10 +63,10 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
 
 
                 //mockdata TODO: change with server fetched data
-                $rootScope.year = 2020;
-                $rootScope.semester_index = 9;
-                localStorage.setItem("year", 2020);
-                localStorage.setItem("semester-index", 9);
+                $rootScope.year = 2018;
+                $rootScope.semester_index = 1;
+                localStorage.setItem("year", 2018);
+                localStorage.setItem("semester-index", 1);
 
 
                 //redirect

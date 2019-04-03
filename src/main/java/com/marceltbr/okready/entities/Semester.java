@@ -45,15 +45,11 @@ public class Semester {
         return yearSemester;
     }
 
-    public YearSemester getYearSemesters() {
-        return yearSemester;
-    }
-
-    public void setYearSemesters(YearSemester yearSemester) {
+    public void setYearSemester(YearSemester yearSemester) {
         this.yearSemester = yearSemester;
     }
 
-    public Set<SemesterObjective> getSemesterObjective() {
+    public Set<SemesterObjective> getSemesterObjectives() {
         return semesterObjectives;
     }
 

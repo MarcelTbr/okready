@@ -39,21 +39,20 @@ public class AppController {
     @Autowired
     private SemesterObjectiveRepository semesterObjectiveRepo;
 
+    @Autowired
+    private ResultRepository resultRepo;
 
+    @Autowired
+    private ObjectiveResultRepository objectiveResultRepo;
 
     /**
      * ======== ENDPOINTS ========
      */
 
-    @RequestMapping("get_semester/{year}/{semester}")
-    public ResponseEntity<Map<String,Object>> getSemester(Authentication auth, @PathVariable long year, @PathVariable long semester){
+    @RequestMapping("get_semester/{year}/{semesterValue}")
+    public ResponseEntity<Map<String,Object>> getSemester(Authentication auth, @PathVariable long year, @PathVariable long semesterValue){
 
         if(auth != null) {
-
-
-            /** TODO find year, find semester, etc... */
-
-
 
             //$scope.semester = {
             //            name: "1st",
@@ -76,8 +75,58 @@ public class AppController {
             //         ]
             //     }];
 
+            List<Semester> semesterList = semesterRepo.findByValue(semesterValue);
 
-            return new ResponseEntity<>(makeMap("success", "Year: " + year + " Semester: " + semester), HttpStatus.ACCEPTED);
+            List<Semester> semesterFoundList = semesterList.stream().filter(semester -> Objects.equals(semester.getYearSemester().getYear().getYear(), year))
+                    .collect(Collectors.toList());
+
+
+            if(semesterFoundList.size() > 0 ){
+
+
+                ArrayList<Map<String,Object>> objectiveArrayList = new ArrayList<>();
+                semesterFoundList.stream().forEach( semester -> {
+
+                    semester.getSemesterObjectives().stream().map(semObj -> semObj.getObjective()).forEach( objective -> {
+
+
+                        List<Result> results = objective.getObjectiveResults().stream().map(objRes -> {
+
+                            return objRes.getResult();
+
+                        }).collect(Collectors.toList());
+
+                        HashMap<String, Object> objectiveMap = new HashMap<String, Object>(){{
+                            put("title", objective.getTitle());
+                            put("total_wins", objective.getTotal_wins());
+                            put("results", results);
+                        }};
+
+                        objectiveArrayList.add(objectiveMap);
+
+                    });
+
+
+                });
+
+                HashMap<String, Object> semesterDTO = new HashMap<String, Object>(){{
+
+                    Semester semester = semesterFoundList.get(0);
+
+                    put("name", semester.getName());
+                    put("value", semester.getValue());
+                    put("okr_array", objectiveArrayList);
+
+
+                }};
+
+
+                return new ResponseEntity<>(makeMap("semesterDTO", semesterDTO), HttpStatus.ACCEPTED);
+
+            } else {
+
+                return new ResponseEntity<>(makeMap("error", "Semester does not exist"), HttpStatus.CONFLICT);
+            }
 
 
         }else {
@@ -196,7 +245,7 @@ public class AppController {
 
                 Object result = resultsIterator.next();
                 Map<String, Object> resultMap = gson.fromJson(result.toString(), new TypeToken<Map<String, Object>>(){}.getType());
-                resultMap.put("wins", 0);
+                resultMap.put("wins", 0L);
 
                 resultsArrayList.add(resultMap);
             }
@@ -242,11 +291,24 @@ public class AppController {
             Objective objective = new Objective();
             objective.setTitle(objv.get("title").toString());
             objective.setTotal_wins(new Double((Double)objv.get("total_wins")).longValue());
+            objectiveRepo.save(objective);
 
             ArrayList resultsArrayList = (ArrayList) objv.get("results");
 
-            objective.setResults(resultsArrayList);
-            objectiveRepo.save(objective);
+            resultsArrayList.stream().forEachOrdered(res ->{
+
+                Map<String,Object> resultMap = (Map<String,Object>) res;
+
+                String title = resultMap.get("title").toString();
+                long winsRatio = new Double((Double)resultMap.get("wins_ratio")).longValue();
+                long wins = (Long) resultMap.get("wins");
+                Result result = new Result(title, winsRatio, wins);
+                resultRepo.save(result);
+
+                ObjectiveResult objectiveResult = new ObjectiveResult(objective, result);
+                objectiveResultRepo.save(objectiveResult);
+                    });
+
             SemesterObjective semesterObjective = new SemesterObjective(semester, objective);
             semesterObjectiveRepo.save(semesterObjective);
         });
@@ -303,9 +365,6 @@ public class AppController {
 
     private Object makeOkrObj(Semester semester) {
 
-
-        /* TODO: make entities and repositories for okrs, titles and wins */
-
         /** okr_array structure **/
 
         // $scope.okr_array = [
@@ -324,32 +383,25 @@ public class AppController {
         //         ]
         //     }];
 
-        /** mockup data **/
 
-        ArrayList<Object> okrArray = new ArrayList<>();
-        Map<String, Object> okrObject = makeMap("title", "Do Sport");
-        okrObject.put("total_wins", 100);
+        List<Object> okrDTO = semester.getSemesterObjectives().stream().map( semObj -> {
 
-            ArrayList<Object> krsArray = new ArrayList<>();
-                Map<String, Object> krsObject1 = new HashMap<String, Object>(){{
+            Objective objective = semObj.getObjective();
+            HashMap<String,Object> objectiveMap = new HashMap<String,Object>(){{
+                put("title", objective.getTitle());
+                put("total_wins", objective.getTotal_wins());
+            }};
 
-                    put("title", "Go Swimming");
-                    put("wins_ratio", 15);
-                    put("wins", 4);
-                }};
-                Map<String, Object> krsObject2 = new HashMap<String, Object>(){{
+            List<Result> results = objective.getObjectiveResults().stream().map(objRes -> objRes.getResult()).collect(Collectors.toList());
 
-                    put("title", "Go Jogging");
-                    put("wins_ratio", 10);
-                    put("wins", 6);
-                }};
-            krsArray.add(krsObject1);
-            krsArray.add(krsObject2);
-        okrObject.put("results", krsArray);
+            objectiveMap.put("results", results);
 
-        okrArray.add(okrObject);
+            return objectiveMap;
 
-        return okrArray;
+
+        }).collect(Collectors.toList());
+
+        return okrDTO;
     }
 
     private Map<String, Object> makeMap(String s, Object object) {

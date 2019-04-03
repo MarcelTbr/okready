@@ -24,6 +24,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
         ];
         $scope.form1.semester = $scope.semesters[0];
         $scope.okr_array = [];
+
         // $scope.okr_array = [
         //     {   title: "something",
         //         total_wins: 50,
@@ -145,7 +146,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                         kr_array = $scope.okr_array[$scope.curr_okr].results;
 
                         //be sure to enter 5 key results or less
-                        if(kr_array.length <5) {
+                        if(kr_array.length < 5) {
                             $scope.okr_array[$scope.curr_okr].results.push(kr);
                             $scope.accOpen($scope.curr_okr);
                             $scope.form3.kr_title = "";
