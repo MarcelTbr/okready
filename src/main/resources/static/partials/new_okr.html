@@ -1,52 +1,54 @@
 <main id="new_okr" class="container">
     <aside id="okr_input">
 
-        <h3>New OKR</h3>
+        <h3 class="center">New OKR</h3>
 
-        <div id="caroussel">
-            <form id="new_f1">
+        <div id="caroussel-cont">
+            <div id="caroussel">
+                <form id="new_f1">
 
-            <label for="year">Year</label>
-            <input id="year" class="form-control short-input" type="text" ng-model="form1.year" disabled>
-            <label for="semester">Select Semester</label>
-            <select class="form-control short-input" id="semester" data-ng-options="s.name for s in semesters" ng-model="form1.semester"
-            ng-disabled="step1"></select>
-            <button class="btn window-button btn-primary" ng-click="openSemester()" ng-disabled="step1">Open Semester</button>
-            <button class="btn window-button btn-danger" ng-click="back(0)" ng-show="step1" ng-disabled="step2 || step3">Back</button>
-            </form>
+                <label for="year">Year</label>
+                <input id="year" class="form-control short-input" type="text" ng-model="form1.year" disabled>
+                <label for="semester">Select Semester</label>
+                <select class="form-control short-input" id="semester" data-ng-options="s.name for s in semesters" ng-model="form1.semester"
+                ng-disabled="step1"></select>
+                <button class="btn window-button btn-primary" ng-click="openSemester()" ng-disabled="step1">Open Semester</button>
+                <button class="btn window-button btn-danger" ng-click="back(0)" ng-show="step1" ng-disabled="step2 || step3">Back</button>
+                </form>
 
-            <form id="new_f2" ng-show="step1">
-                <h4>Define your objective</h4>
-                <fieldset id="fs_1">
-                    <input id="objective_title" class="form-control short-input" type="text" ng-model="form2.obj_title"
-                    placeholder="Objective Title" ng-model="form2.obj_title">
-                    <i id="ok11" class="fa fa-check-square-o ok" ng-click="ok('objective_title', 11)"></i></input>
-                    <i id="not11" class="fa fa-edit not" ng-click="not('objective_title', 11)"></i></input>
+                <form id="new_f2" ng-show="step1">
+                    <h4>Define your objective</h4>
+                    <fieldset id="fs_1">
+                        <input id="objective_title" class="form-control short-input" type="text" ng-model="form2.obj_title"
+                        placeholder="Objective Title" ng-model="form2.obj_title">
+                        <i id="ok11" class="fa fa-check-square-o ok" ng-click="ok('objective_title', 11)"></i></input>
+                        <i id="not11" class="fa fa-edit not" ng-click="not('objective_title', 11)"></i></input>
 
-                    <input id="objective_wins" class="form-control short-input" type="number" ng-model="form2.obj_wins"
-                    placeholder="Objective Wins (number)" ng-model="form2.obj_wins">
-                    <i id="ok12" class="fa fa-check-square-o ok" ng-click="ok('objective_wins', 12)"></i></input>
-                    <i id="not12" class="fa fa-edit not" ng-click="not('objective_wins', 12)"></i></input>
-                    <button id="next2" class="btn window-button btn-primary" ng-click="next(2)">Next</button>
-                </fieldset>
-                <button class="btn window-button btn-danger back" ng-click="back(1)" ng-show="step2">Back</button>
-            </form>
+                        <input id="objective_wins" class="form-control short-input" type="number" ng-model="form2.obj_wins"
+                        placeholder="Objective Wins (number)" ng-model="form2.obj_wins">
+                        <i id="ok12" class="fa fa-check-square-o ok" ng-click="ok('objective_wins', 12)"></i></input>
+                        <i id="not12" class="fa fa-edit not" ng-click="not('objective_wins', 12)"></i></input>
+                        <button id="next2" class="btn window-button btn-primary" ng-click="next(2)">Next</button>
+                    </fieldset>
+                    <button class="btn window-button btn-danger back" ng-click="back(1)" ng-show="step2">Back</button>
+                </form>
 
-            <form id="new_f3" ng-show="step1">
-                <h4>Add Key Results</h4>
-                <input id="kr_title" class="form-control short-input" type="text" ng-model="form3.kr_title"
-                placeholder="Key Result Title" ng-model="form3.kr_title">
-                <i id="ok1" class="fa fa-check-square-o ok" ng-click="ok('kr_title', 1)"></i></input>
-                <i id="not1" class="fa fa-edit not" ng-click="not('kr_title', 1)"></i></input>
+                <form id="new_f3" ng-show="step2">
+                    <h4>Add Key Results</h4>
+                    <input id="kr_title" class="form-control short-input" type="text" ng-model="form3.kr_title"
+                    placeholder="Key Result Title" ng-model="form3.kr_title">
+                    <i id="ok1" class="fa fa-check-square-o ok" ng-click="ok('kr_title', 1)"></i></input>
+                    <i id="not1" class="fa fa-edit not" ng-click="not('kr_title', 1)"></i></input>
 
-                <input id="kr_wins" class="form-control short-input" type="number" ng-model="form3.kr_wins"
-                placeholder="Key Result Wins (number)" ng-model="form3.kr_wins">
-                <i id="ok2" class="fa fa-check-square-o ok" ng-click="ok('kr_wins', 2)"></i></input>
-                <i id="not2" class="fa fa-edit not" ng-click="not('kr_wins', 2)"></i></input>
-                <button id="add_kr_btn" class="btn window-button btn-success" ng-click="next(3)">Add</button>
-                <button id="next_obj_btn" class="btn window-button btn-primary" ng-click="next(4)" ng-show="step3">Next Objective</button>
-                <button class="btn window-button btn-danger" ng-click="back(2)" ng-show="step3">Back 1 </button>
-            </form>
+                    <input id="kr_wins" class="form-control short-input" type="number" ng-model="form3.kr_wins"
+                    placeholder="Key Result Wins (number)" ng-model="form3.kr_wins">
+                    <i id="ok2" class="fa fa-check-square-o ok" ng-click="ok('kr_wins', 2)"></i></input>
+                    <i id="not2" class="fa fa-edit not" ng-click="not('kr_wins', 2)"></i></input>
+                    <button id="add_kr_btn" class="btn window-button btn-success" ng-click="next(3)">Add</button>
+                    <button id="next_obj_btn" class="btn window-button btn-primary" ng-click="next(4)" ng-show="step3">Next Objective</button>
+                    <button class="btn window-button btn-danger" ng-click="back(2)" ng-show="step3">Back 1 </button>
+                </form>
+            </div>
         </div>
     </aside>
     <aside id="okr_list" class="center">

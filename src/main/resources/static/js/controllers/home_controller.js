@@ -62,7 +62,7 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                 localStorage.setItem("open-okr-session", "yes");
 
 
-                //mockdata TODO: change with server fetched data
+                //mockdata TODO: change with server fetched data (last saved semester)
                 $rootScope.year = 2018;
                 $rootScope.semester_index = 1;
                 localStorage.setItem("year", 2018);

@@ -49,6 +49,77 @@ public class AppController {
      * ======== ENDPOINTS ========
      */
 
+    @RequestMapping( value = "save_semester_edit", method = RequestMethod.POST)
+    public ResponseEntity<Map<String,Object>>saveSemesterEdit(@RequestBody String semesterJson, Authentication auth) {
+
+        if(auth != null) {
+
+            JSONObject json = new JSONObject(semesterJson);
+
+            Long yearNum = json.getLong("year");
+            Long value = json.getLong("value");
+
+            // turn a javascript object into an ArrayList
+            ArrayList<Map<String,Object>> okrArrayList = makeOKRArrayList(json, false);
+
+
+            List<Semester> semesterList = semesterRepo.findByValue(value);
+
+            // get the semester of the given year from the list
+            List<Semester> foundSemesterList = semesterList.stream().filter(s -> Objects.equals(s.getYearSemester().getYear().getYear(), yearNum))
+                    .collect(Collectors.toList());
+
+
+            if(foundSemesterList.size() > 0) {
+
+                updateSemester(okrArrayList);
+
+                return new ResponseEntity<>(makeMap("success", "Semester saved"), HttpStatus.ACCEPTED);
+
+            } else {
+
+                return new ResponseEntity<>(makeMap("error", "Semester not found"), HttpStatus.CONFLICT);
+
+            }
+
+        }else {
+
+            return new ResponseEntity<>(makeMap("error", "User not authenticated"), HttpStatus.FORBIDDEN);
+
+        }
+
+    }
+
+    private void updateSemester(ArrayList<Map<String, Object>> okrArrayList) {
+
+
+        okrArrayList.stream().map(obj-> {
+
+            Map<String,Object> objective = (Map<String, Object>) obj;
+
+            ArrayList resultsList = (ArrayList) obj.get("results");
+
+            return resultsList;
+        }).flatMap( results -> results.stream()).forEachOrdered(res ->{
+                        System.out.println(res.toString());
+
+
+                Map<String,Object> resultMap = (Map<String,Object>) res;
+                long id = new Double ((Double) resultMap.get("id")).longValue();
+
+                Result result = resultRepo.findById(id);
+
+                long wins = new Double((Double) resultMap.get("wins")).longValue();
+
+                result.setWins(wins);
+
+                resultRepo.save(result);
+        });
+
+
+
+    }
+
     @RequestMapping("get_semester/{year}/{semesterValue}")
     public ResponseEntity<Map<String,Object>> getSemester(Authentication auth, @PathVariable long year, @PathVariable long semesterValue){
 
@@ -60,18 +131,20 @@ public class AppController {
             //            value: 1
 
             // $scope.okr_array = [
-            //     {   title: "something",
+            //     {   id: 1,
+            //         title: "something",
             //         total_wins: 50,
             //         results: [
-            //             {title: "something else", wins_ratio: 1, wins: 8},
-            //             {title: "something else", wins_ratio: 1, wins: 8}
+            //             {result_id: 1, title: "something else", wins_ratio: 1, wins: 8},
+            //             {result_id: 2, title: "something else", wins_ratio: 1, wins: 8}
             //         ]
             //     },
-            //     {   title: "something",
+            //     {   id: 2,
+            //         title: "something",
             //         total_wins: 50,
             //         results: [
-            //             {title: "something else", wins_ratio: 1, wins: 8},
-            //             {title: "something else", wins_ratio: 1, wins: 8}
+            //             {id: 3, title: "something else", wins_ratio: 1, wins: 8},
+            //             {id: 4, title: "something else", wins_ratio: 1, wins: 8}
             //         ]
             //     }];
 
@@ -96,7 +169,10 @@ public class AppController {
 
                         }).collect(Collectors.toList());
 
+                                    System.out.println(results.get(0).toString());
+
                         HashMap<String, Object> objectiveMap = new HashMap<String, Object>(){{
+                            put("id", objective.getId());
                             put("title", objective.getTitle());
                             put("total_wins", objective.getTotal_wins());
                             put("results", results);
@@ -216,7 +292,7 @@ public class AppController {
 
     }
 
-    private ArrayList<Map<String, Object>> makeOKRArrayList(JSONObject json) {
+    private ArrayList<Map<String, Object>> makeOKRArrayList(JSONObject json, boolean firstSave) {
         JSONArray okr_array = json.getJSONArray("okr_array");
 
         Iterator okrArrayIterator = okr_array.iterator();
@@ -245,7 +321,11 @@ public class AppController {
 
                 Object result = resultsIterator.next();
                 Map<String, Object> resultMap = gson.fromJson(result.toString(), new TypeToken<Map<String, Object>>(){}.getType());
-                resultMap.put("wins", 0L);
+
+                //only add wins if it's the first save: when creating the Semester
+                if(firstSave) {
+                    resultMap.put("wins", 0L);
+                }
 
                 resultsArrayList.add(resultMap);
             }
@@ -269,7 +349,7 @@ public class AppController {
     private void saveYearAndSemester(Long yearNum, Long value, String name, JSONObject json ) {
 
         // turn a javascript object into an ArrayList
-        ArrayList<Map<String,Object>> okrArrayList = makeOKRArrayList(json);
+        ArrayList<Map<String,Object>> okrArrayList = makeOKRArrayList(json, true);
 
                 //print out again to double-check
                 okrArrayList.stream().forEach(objective -> {

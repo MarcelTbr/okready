@@ -107,5 +107,47 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
         };
 
 
+        $scope.edit = false;
 
-    }]);
+        $scope.editSemester = function() {
+
+            $("span.toggle-kr-edit").css("display", "block");
+            $scope.edit = true;
+        };
+        $scope.cancelEditSemester = function() {
+
+            $("span.toggle-kr-edit").css("display", "none");
+            $scope.edit = false;
+        };
+
+        $scope.saveSemesterEdit = function(){
+
+            console.log($scope.semester);
+
+            var semesterJSON = {
+                'year': $scope.year, //$routeParams.year
+                'name' :  $scope.semester.name,
+                'value':  $scope.semester.value,
+                'okr_array': $scope.semester.okr_array
+            };
+
+
+            $http({
+                url: "api/save_semester_edit",
+                method: 'POST',
+                data: semesterJSON,
+                headers: {"Content-Type": "application/json"
+            }
+            }).then(function(response){
+
+                    console.log(response);
+            }, function (error){
+                    console.log(error);
+            });
+
+        };
+
+
+
+
+        }]);

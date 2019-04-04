@@ -55,4 +55,8 @@ public class Objective {
     public Set<ObjectiveResult> getObjectiveResults() {
         return objectiveResults;
     }
+
+    public long getId() {
+        return id;
+    }
 }

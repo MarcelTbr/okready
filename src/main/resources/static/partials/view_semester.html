@@ -5,6 +5,13 @@
 
 
     <section id="okr_list" class="center">
+        <div id="controls">
+            <button class="btn btn-primary" ng-click="editSemester()" ng-show="!edit">Edit</button>
+            <button class="btn btn-danger" ng-click="cancelEditSemester()" ng-show="edit">Cancel</button>
+            <button class="btn btn-success" ng-show="edit" ng-click="saveSemesterEdit()">Save</button>
+
+        </div>
+
         <h3>OKR LIST</h3>
         <div ng-model="okr" class="okr-item" ng-repeat="okr in semester.okr_array" ng-init="$i_out = $index">
             <button id="okr-{{$i_out}}" class="accordion" ng-click="accToggle($i_out)"><b>{{okr.total_wins}}W | {{okr.title}} </b>: <span ng-bind="calculateCompletion(okr)"></span></button>

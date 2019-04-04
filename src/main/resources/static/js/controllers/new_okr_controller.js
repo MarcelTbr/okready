@@ -103,6 +103,8 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
             var cond1 = $("#objective_title").attr("disabled") !== undefined;
             var cond2 = $("#objective_wins").attr("disabled") !== undefined;
 
+
+
             switch(step){
                 case 2:
                         //console.log($("#objective_title").attr("disabled"));
@@ -133,37 +135,48 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
 
                    break;
                 case 3:
-                    var kr = {};
-                    var kr_array = [];
 
-                    console.log($scope.form3.kr_title);
-                    console.log($scope.form3.kr_wins);
+                    var ok1Step3 = $("#ok1");
+                    var ok2Step3 =$("#ok2");
 
-                    //to avoid user entering through keyboard causing an extra empty kr_array element
-                    if($scope.form3.kr_title !== undefined && $scope.form3.kr_title !== "") {
-                        kr.title = $scope.form3.kr_title;
-                        kr.wins_ratio = $scope.form3.kr_wins;
-                        kr_array = $scope.okr_array[$scope.curr_okr].results;
+                    var cond3 = ok1Step3.css("display") == 'none' && ok2Step3.css("display") == 'none';
 
-                        //be sure to enter 5 key results or less
-                        if(kr_array.length < 5) {
-                            $scope.okr_array[$scope.curr_okr].results.push(kr);
-                            $scope.accOpen($scope.curr_okr);
-                            $scope.form3.kr_title = "";
-                            $scope.form3.kr_wins = "";
-                            $scope.step3 = true;
+                    if(cond3) {
 
-                            // reset key results title and wins input fields
-                            $scope.not("kr_title", 1);
-                            $scope.not("kr_wins", 2);
+                        var kr = {};
+                        var kr_array = [];
 
-                            //focus on okr title input field
-                            $timeout( $('#kr_title').focus(), 1000);
+                        console.log($scope.form3.kr_title);
+                        console.log($scope.form3.kr_wins);
 
-                        } else{
-                            alert("Sorry it's better to have only a handful of key results."
-                                + "\n You can now save your objective");
+                        //to avoid user entering through keyboard causing an extra empty kr_array element
+                        if ($scope.form3.kr_title !== undefined && $scope.form3.kr_title !== "") {
+                            kr.title = $scope.form3.kr_title;
+                            kr.wins_ratio = $scope.form3.kr_wins;
+                            kr_array = $scope.okr_array[$scope.curr_okr].results;
+
+                            //be sure to enter 5 key results or less
+                            if (kr_array.length < 5) {
+                                $scope.okr_array[$scope.curr_okr].results.push(kr);
+                                $scope.accOpen($scope.curr_okr);
+                                $scope.form3.kr_title = "";
+                                $scope.form3.kr_wins = "";
+                                $scope.step3 = true;
+
+                                // reset key results title and wins input fields
+                                $scope.not("kr_title", 1);
+                                $scope.not("kr_wins", 2);
+
+                                //focus on okr title input field
+                                $timeout($('#kr_title').focus(), 1000);
+
+                            } else {
+                                alert("Sorry it's better to have only a handful of key results."
+                                    + "\n You can now save your objective");
+                            }
                         }
+                    } else {
+                        alert("Please fill in your key result fields and check the blue boxes to add an objective.");
                     }
 
                     break;

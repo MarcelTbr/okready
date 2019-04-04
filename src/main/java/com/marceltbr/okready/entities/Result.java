@@ -26,6 +26,10 @@ public class Result {
         this.wins = wins;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String getTitle() {
         return title;
     }

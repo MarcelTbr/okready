@@ -168,6 +168,7 @@
     height: 34px;
     /*border: 1px solid red;*/
     overflow: hidden;
+    display:none;
 
 }
 
@@ -201,6 +202,20 @@
 .completion p {
     font-size: 20px;
     color: #777777;
+}
+
+#controls {
+    width: 100%;
+    height: 15px;
+    position:relative;
+}
+
+#controls .btn-primary, #controls .btn-danger {
+    float:left;
+}
+
+#controls .btn-success {
+    float:right;
 }
 
 /* ===== accordion ===== */
@@ -292,7 +307,7 @@
 
 
 .short-input {
-    width: 250px;
+    width: 230px;
 }
 
 #new_f1, #new_f2, #new_f3{
@@ -304,11 +319,16 @@
 }
 
 #new_f1 *, #new_f2 *, #new_f3 *{
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 #new_f2 input, #new_f3 input {
     float: left;
+    margin-bottom: 10px;
+}
+
+#new_f1 input {
+    margin-bottom: 10px;
 }
 
 .ok {
@@ -332,7 +352,7 @@
 .back {
     float: left;
     position: relative;
-    top: -43px;
+    top: -53px;
     left: 60px;
 }
 
@@ -345,10 +365,29 @@
 
  /*======= caroussel ====*/
 
-#caroussel {
-
+#caroussel-cont {
+    position:relative;
     height: 200px;
+    overflow:hidden;
     /*border:1px dotted lightgrey;*/
-    overflow-y: scroll;
 
+
+}
+
+#caroussel {
+    height:200px;
+    overflow-y: scroll;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right: -17px;
+    overflow-x: hidden;
+}
+
+#caroussel form {
+    height:200px;
+    padding-left:15px;
+    padding-top: 9px;
+    box-sizing: border-box;
 }
