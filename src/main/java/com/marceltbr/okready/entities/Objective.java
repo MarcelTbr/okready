@@ -12,8 +12,7 @@ public class Objective {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="objective_id")
+    @GeneratedValue(strategy = GenerationType.AUTO) //@Column(name="objective_id")
     long id;
 
 

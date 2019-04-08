@@ -15,8 +15,8 @@ public class Result {
 
     private long wins;
 
-    @OneToOne(mappedBy = "result", fetch = FetchType.EAGER)
-    private ObjectiveResult objectiveResult;
+//    @OneToOne(mappedBy = "result", fetch = FetchType.EAGER)
+//    private ObjectiveResult objectiveResult;
 
     public Result(){}
 

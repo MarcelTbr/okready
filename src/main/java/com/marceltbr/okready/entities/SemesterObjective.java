@@ -17,7 +17,7 @@ public class SemesterObjective {
     @JoinColumn(name="objective_id")
     private Objective objective;
 
-    SemesterObjective () {}
+    public SemesterObjective () {}
 
     public SemesterObjective(Semester semester, Objective objective) {
         this.semester = semester;

@@ -6,15 +6,24 @@
 
     <section id="okr_list" class="center">
         <div id="controls">
-            <button class="btn btn-primary" ng-click="editSemester()" ng-show="!edit">Edit</button>
-            <button class="btn btn-danger" ng-click="cancelEditSemester()" ng-show="edit">Cancel</button>
-            <button class="btn btn-success" ng-show="edit" ng-click="saveSemesterEdit()">Save</button>
+            <button class="btn btn-edit" ng-click="editSemester()" ng-show="!edit">
+            Edit
+             <i class="far fa-edit white"></i>
+            </button>
+            <button class="btn btn-cancel" ng-click="cancelEditSemester()" ng-show="edit">
+             <i class="far fa-window-close"></i>
+             Cancel
+            </button>
+            <button class="btn btn-save" ng-show="edit" ng-click="saveSemesterEdit()">
+            <i class="far fa-save"></i>
+             Save
+             </button>
 
         </div>
 
         <h3>OKR LIST</h3>
-        <div ng-model="okr" class="okr-item" ng-repeat="okr in semester.okr_array" ng-init="$i_out = $index">
-            <button id="okr-{{$i_out}}" class="accordion" ng-click="accToggle($i_out)"><b>{{okr.total_wins}}W | {{okr.title}} </b>: <span ng-bind="calculateCompletion(okr)"></span></button>
+        <div ng-model="okr" class="okr-item" ng-repeat="okr in semester.okr_array | orderBy: 'id'" ng-init="$i_out = $index">
+            <button id="okr-{{$i_out}}" class="accordion" ng-click="accToggle($i_out)"><b>{{okr.total_wins}} <i class="smaller-font fas fa-trophy"></i> | {{okr.title}} </b>: <span ng-bind="calculateCompletion(okr)"></span></button>
             <div class="panel">
                 <div class="completion">
 
@@ -22,22 +31,30 @@
 
                 </div>
                 <ul class="kr_list">
-                  <div  ng-if="kr.title != undefined && kr.title != '' " ng-repeat="kr in okr.results" ng-init="$i_in = $index">
+                  <div  ng-if="kr.title != undefined && kr.title != '' " ng-repeat="kr in okr.results | orderBy: 'id'" ng-init="$i_in = $index">
                       <li class="kr bg-primary text-white shadow rounded">
                           <span >{{kr.title}}</span>
                           <span>Wins {{kr.winsRatio}}x </span>
                       </li>
                       <div class="kr-wins-detail">
-                        <span>Key Result Wins: {{kr.wins * kr.winsRatio}}</span>
+                        <span>
+                        {{kr.wins * kr.winsRatio}}
+                        <i class="smaller-font orange fas fa-trophy"></i>
+                        </span>
                         <div>
-
+                            <button id="minus1-{{$i_out}}{{$i_in}}"class="btn" ng-click="minus1($i_out, $i_in)">
+                                <i class="far fa-minus-square"></i>
+                            </button>
                             <input ng-model="kr.wins" type="number" id="kr-wins-{{$i_out}}{{$i_in}}" class="kr-wins-input" value="{{kr.wins}}" disabled>
-                            <span class="toggle-kr-edit">
+                            <button id="plus1-{{$i_out}}{{$i_in}}" class="btn" ng-click="plus1($i_out, $i_in)">
+                                <i class="far fa-plus-square"></i>
+                            </button>
+                            <!---<span class="toggle-kr-edit">
                                 <div id="tgl-krt-{{$i_out}}{{$i_in}}" class="toggle-kart">
                                     <i id="edit-kr-{{$i_out}}{{$i_in}}" class="edit-kr fa fa-edit" ng-click="edit_kr( $i_out , $i_in)"></i></input>
                                     <i id="ok-kr-{{$i_out}}{{$i_in}}" class="ok-kr fa fa-check-square-o" ng-click="ok_kr($i_out , $i_in)"></i></input>
                                 </div>
-                            </span>
+                            </span>-->
                         </div>
 
                         </div>

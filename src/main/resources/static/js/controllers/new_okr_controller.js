@@ -65,35 +65,49 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
 
             switch(step){
 
-                case 0: $scope.step1 = false; $scope.step2 = false; $scope.step3 = false;
+                case 0:
+
+                    $scope.step1 = false; $scope.step2 = false; $scope.step3 = false;
                     $("#new_f1, #new_f2").css("backgroundColor", "white");
                     $("#next2").attr("disabled",false);
 
                     //reset fields
                     $scope.form2.obj_title = "";
                     $scope.form2.obj_wins = "";
-                    $scope.okr_array = []; break;
-                case 1: $scope.step2 = false; $scope.step3 = false;
+                    $scope.okr_array = [];
+
+                    $scope.save = false;
+                    break;
+
+                case 1:
+
+                    $scope.step2 = false; $scope.step3 = false;
                     $("#new_f2").css("backgroundColor", "white");
                     $scope.not('objective_title', 11);
                     $scope.not('objective_wins', 12);
                     $("#fs_1").attr("disabled", false);
+
                     if($scope.curr_okr > 0){
                         $scope.curr_okr--;
                     }
                     if($scope.okr_array.length >0){
                         $scope.okr_array.pop();
                     }
-                    $scope.stopDigest = true;
+
+                    if($scope.okr_array.length === 0){
+                        $scope.save = false;
+                    }
 
                     break;
+
                 case 2:
 
-                        $scope.okr_array[$scope.curr_okr].results.pop();
-                        if($scope.okr_array[$scope.curr_okr].results.length == 0){
-                            $scope.accToggle($scope.curr_okr);
-                            $scope.step3 = false;
-                        }
+                    $scope.okr_array[$scope.curr_okr].results.pop();
+                    if($scope.okr_array[$scope.curr_okr].results.length == 0){
+                        $scope.accToggle($scope.curr_okr);
+                        $scope.step3 = false;
+                        $scope.save = false;
+                    }
                     break;
             }
         };
@@ -119,8 +133,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                         }, 2000);
 
                         //focus on the new form field
-
-                        $scope.$apply();
+                        //$scope.$apply();
 
                         $timeout(function(){$('input#kr_title').focus();}, 0);
 
@@ -155,6 +168,10 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                             kr.wins_ratio = $scope.form3.kr_wins;
                             kr_array = $scope.okr_array[$scope.curr_okr].results;
 
+
+                            $scope.save = true;
+
+
                             //be sure to enter 5 key results or less
                             if (kr_array.length < 5) {
                                 $scope.okr_array[$scope.curr_okr].results.push(kr);
@@ -183,7 +200,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                 case 4:
 
                     if($scope.okr_array[$scope.curr_okr ].results.length <= 1 && $scope.okr_array[$scope.curr_okr].results[0].title == undefined){
-                        alert ("Sorry you have to defina at least one objective key result");
+                        alert ("Sorry you have to define at least one objective key result");
 
                         $('#kr_title').focus();
 
@@ -202,6 +219,11 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
 
                         //focus on objective title
                         $("#objective_title").focus();
+
+                        //go back to second caroussel div
+                        $("#caroussel").animate({
+                            scrollTop: "200px"
+                        }, 0);
 
                     }else {
                         alert("Sorry you can only have a handful of OKRs");
@@ -270,17 +292,9 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                 console.log(okr_obj);
                 okr_obj.results = [];
 
-
                 $scope.okr_array.push(okr_obj);
 
-
-                if($scope.okr_array.length > 0){
-
-                    $scope.save = true;
-                }
-
                 console.log($scope.okr_array);
-
 
         }
 

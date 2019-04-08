@@ -6,6 +6,8 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
         var vm = this;
         $rootScope.user = false;
         $scope.$route = $route;
+        $rootScope.year = 0;
+        $rootScope.semester_index = 0;
 
         function checkSession() {
 
@@ -24,6 +26,8 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
 
         checkSession();
 
+        //load last viewed semester
+        lastViewedSemester();
 
         function lastViewedSemester() {
 
@@ -35,11 +39,19 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                 $rootScope.year = localStorage.getItem("year");
                 $rootScope.semester_index = localStorage.getItem("semester-index");
 
+            } else {
+
+                $rootScope.year = 2019;
+                $rootScope.semester_index = 1;
+                localStorage.setItem("year", 2019);
+                localStorage.setItem("semester-index", 1);
+
             }
+
 
         }
 
-        lastViewedSemester();
+
 
         vm.LogmeIn = function() {
 
@@ -60,14 +72,6 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                 }
                 vm.password = "";
                 localStorage.setItem("open-okr-session", "yes");
-
-
-                //mockdata TODO: change with server fetched data (last saved semester)
-                $rootScope.year = 2018;
-                $rootScope.semester_index = 1;
-                localStorage.setItem("year", 2018);
-                localStorage.setItem("semester-index", 1);
-
 
                 //redirect
                 $window.location.href = "/view_semester/"+$rootScope.year + "/" + $rootScope.semester_index;

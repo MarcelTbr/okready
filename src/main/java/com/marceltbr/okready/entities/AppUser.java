@@ -3,38 +3,41 @@ package com.marceltbr.okready.entities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 
+@Entity
+public class AppUser {
 
 
-    @Entity
-    public class AppUser {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
+    private String username;
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        private long id;
+    private String password;
 
-        private String username;
+    @OneToMany(mappedBy = "appUser", fetch = FetchType.EAGER)
+    private Set<AppUserYear> appUserYears;
 
-        private String password;
+    public AppUser(){}
 
-        public AppUser(){}
-
-        public AppUser(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
+    public AppUser(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Set<AppUserYear> getAppUserYears() {
+        return appUserYears;
+    }
+}

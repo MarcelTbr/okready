@@ -21,33 +21,36 @@
                     <fieldset id="fs_1">
                         <input id="objective_title" class="form-control short-input" type="text" ng-model="form2.obj_title"
                         placeholder="Objective Title" ng-model="form2.obj_title">
-                        <i id="ok11" class="fa fa-check-square-o ok" ng-click="ok('objective_title', 11)"></i></input>
-                        <i id="not11" class="fa fa-edit not" ng-click="not('objective_title', 11)"></i></input>
+                        <i id="ok11" class="far fa-check-square ok" ng-click="ok('objective_title', 11)"></i></input>
+                        <i id="not11" class="far fa-edit not" ng-click="not('objective_title', 11)"></i></input>
 
                         <input id="objective_wins" class="form-control short-input" type="number" ng-model="form2.obj_wins"
                         placeholder="Objective Wins (number)" ng-model="form2.obj_wins">
-                        <i id="ok12" class="fa fa-check-square-o ok" ng-click="ok('objective_wins', 12)"></i></input>
-                        <i id="not12" class="fa fa-edit not" ng-click="not('objective_wins', 12)"></i></input>
-                        <button id="next2" class="btn window-button btn-primary" ng-click="next(2)">Next</button>
+                        <i id="ok12" class="far fa-check-square ok" ng-click="ok('objective_wins', 12)"></i></input>
+                        <i id="not12" class="far fa-edit not" ng-click="not('objective_wins', 12)"></i></input>
                     </fieldset>
+                    <button id="next2" class="btn window-button btn-primary" ng-click="next(2)">Next</button>
                     <button class="btn window-button btn-danger back" ng-click="back(1)" ng-show="step2">Back</button>
                 </form>
 
                 <form id="new_f3" ng-show="step2">
                     <h4>Add Key Results</h4>
-                    <input id="kr_title" class="form-control short-input" type="text" ng-model="form3.kr_title"
-                    placeholder="Key Result Title" ng-model="form3.kr_title">
-                    <i id="ok1" class="fa fa-check-square-o ok" ng-click="ok('kr_title', 1)"></i></input>
-                    <i id="not1" class="fa fa-edit not" ng-click="not('kr_title', 1)"></i></input>
+                    <fieldset>
+                        <input id="kr_title" class="form-control short-input" type="text" ng-model="form3.kr_title"
+                        placeholder="Key Result Title" ng-model="form3.kr_title" autofocus>
+                        <i id="ok1" class="far fa-check-square ok" ng-click="ok('kr_title', 1)"></i></input>
+                        <i id="not1" class="far fa-edit not" ng-click="not('kr_title', 1)"></i></input>
 
-                    <input id="kr_wins" class="form-control short-input" type="number" ng-model="form3.kr_wins"
-                    placeholder="Key Result Wins (number)" ng-model="form3.kr_wins">
-                    <i id="ok2" class="fa fa-check-square-o ok" ng-click="ok('kr_wins', 2)"></i></input>
-                    <i id="not2" class="fa fa-edit not" ng-click="not('kr_wins', 2)"></i></input>
+                        <input id="kr_wins" class="form-control short-input" type="number" ng-model="form3.kr_wins"
+                        placeholder="Key Result Wins (number)" ng-model="form3.kr_wins">
+                        <i id="ok2" class="far fa-check-square ok" ng-click="ok('kr_wins', 2)"></i></input>
+                        <i id="not2" class="far fa-edit not" ng-click="not('kr_wins', 2)"></i></input>
+                    </fieldset>
                     <button id="add_kr_btn" class="btn window-button btn-success" ng-click="next(3)">Add</button>
                     <button id="next_obj_btn" class="btn window-button btn-primary" ng-click="next(4)" ng-show="step3">Next Objective</button>
                     <button class="btn window-button btn-danger" ng-click="back(2)" ng-show="step3">Back 1 </button>
                 </form>
+
             </div>
         </div>
     </aside>
@@ -55,7 +58,7 @@
         <h3>OKR LIST</h3>
         <h5 ng-show="step1">{{form1.semester.name}} Semester of {{form1.year}}</h5>
         <div class="okr-item" ng-repeat="okr in okr_array">
-            <button class="accordion" ng-click="accToggle($index)"><b>{{okr.total_wins}}W | {{okr.title}}</b></button>
+            <button class="accordion" ng-click="accToggle($index)"><b>{{okr.total_wins}} <i class="smaller-font fas fa-trophy"></i> | {{okr.title}}</b></button>
             <div class="panel">
               <ul class="kr_list">
                   <li ng-if="kr.title != undefined && kr.title != '' " ng-repeat="kr in okr.results" class="kr bg-primary text-white shadow rounded">

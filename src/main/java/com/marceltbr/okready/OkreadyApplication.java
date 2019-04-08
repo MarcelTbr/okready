@@ -94,7 +94,8 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 	public CommandLineRunner initData(AppUserRepository appUserRepository, YearRepository yearRepository,
 									  YearSemesterRepository yearSemesterRepository, SemesterRepository semesterRepository,
 									  ObjectiveRepository objectiveRepo, SemesterObjectiveRepository semesterObjectiveRepo,
-									  ResultRepository resultRepo, ObjectiveResultRepository objectiveResultRepo) {
+									  ResultRepository resultRepo, ObjectiveResultRepository objectiveResultRepo,
+									  AppUserYearRepository appUserYearRepo) {
 
 		return (args) -> {
 
@@ -104,6 +105,10 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 
 			//create initial year and semester data
 			Year year = new Year(2018); yearRepository.save(year);
+
+			AppUserYear appUserYear1 = new AppUserYear(year, admin);//link year to user
+			appUserYearRepo.save(appUserYear1);
+
 			Semester sem1 = new Semester(1, "1st");
 			semesterRepository.save(sem1);
 			YearSemester yearSemester = new YearSemester(year, sem1);
@@ -129,6 +134,48 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 			ObjectiveResult objRes2 = new ObjectiveResult(objective1, result2);
 
 			objectiveResultRepo.save(objRes1);objectiveResultRepo.save(objRes2);
+
+			/** Guest User DATA **/
+			//create Guest User
+			AppUser guest = new AppUser("guest", "guest");
+			appUserRepository.save(guest);
+
+			//create initial year and semester data
+			Year year2 = new Year(2019); yearRepository.save(year2);
+
+			AppUserYear appUserYear2 = new AppUserYear(year2, guest);//link year to user
+			appUserYearRepo.save(appUserYear2);
+
+			Semester sem2 = new Semester(1, "1st");
+			semesterRepository.save(sem2);
+			YearSemester yearSemester2 = new YearSemester(year2, sem2);
+			yearSemesterRepository.save(yearSemester2);
+
+			//create objective
+			Objective objective2 = new Objective("Do Sport", 120L);
+			objectiveRepo.save(objective2);
+
+			//create semesterObjectives
+			SemesterObjective semObj2 = new SemesterObjective(sem2, objective2);
+			semesterObjectiveRepo.save(semObj2);
+
+			//create results
+			Result result11 = new Result("Go Swimming", 10L, 5L);
+			Result result12 = new Result("Go Jogging", 5L, 8L);
+			Result result13 = new Result("Miss training", -5L, 2L);
+
+			resultRepo.save(result11); resultRepo.save(result12); resultRepo.save(result13);
+
+			//create objectiveResults
+
+			ObjectiveResult objRes11 = new ObjectiveResult(objective2, result11);
+			ObjectiveResult objRes12 = new ObjectiveResult(objective2, result12);
+			ObjectiveResult objRes13 = new ObjectiveResult(objective2, result13);
+
+			objectiveResultRepo.save(objRes11);objectiveResultRepo.save(objRes12);
+			objectiveResultRepo.save(objRes13);
+
+
 
 
 		};

@@ -15,6 +15,9 @@ public class Year {
     @OneToMany(mappedBy = "year", fetch = FetchType.EAGER)
     private Set<YearSemester> yearSemesters;
 
+    @OneToOne(mappedBy ="year", fetch = FetchType.EAGER)
+    private AppUserYear appUserYear;
+
     public Year(){}
 
     public Year(long year) {
@@ -31,5 +34,9 @@ public class Year {
 
     public Set<YearSemester> getYearSemesters() {
         return yearSemesters;
+    }
+
+    public AppUserYear getAppUserYear() {
+        return appUserYear;
     }
 }

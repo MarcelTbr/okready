@@ -101,8 +101,6 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
                     actual_wins += result.winsRatio * result.wins;
                 }
 
-
-
             return Math.round(actual_wins * 100 / total_wins) + " %";
         };
 
@@ -112,12 +110,34 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
         $scope.editSemester = function() {
 
             $("span.toggle-kr-edit").css("display", "block");
+            $(".kr-wins-detail button").css("display", "inline-block");
+
+            $(".kr-wins-input").prop("disabled", false).css({color: "dodgerblue", backgroundColor: "white"});
+
             $scope.edit = true;
         };
         $scope.cancelEditSemester = function() {
 
             $("span.toggle-kr-edit").css("display", "none");
+            $(".kr-wins-detail button").css("display", "none");
+
+            $(".kr-wins-input").prop("disabled", true).css({color: "black", backgroundColor: "whitesmoke"});
+
             $scope.edit = false;
+        };
+
+        $scope.minus1 = function($i_out, $i_in) {
+
+            var wins_input = $("#kr-wins-" + $i_out + "" + $i_in);
+            $scope.semester.okr_array[$i_out].results[$i_in].wins -= 1;
+
+        };
+
+        $scope.plus1 = function($i_out, $i_in) {
+
+            var wins_input = $("#kr-wins-" + $i_out + "" + $i_in);
+            var input_wins = $scope.semester.okr_array[$i_out].results[$i_in].wins += 1;
+
         };
 
         $scope.saveSemesterEdit = function(){
@@ -141,6 +161,13 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
             }).then(function(response){
 
                     console.log(response);
+
+                    $scope.cancelEditSemester();
+
+                    alert("Semester progress successfully saved!")
+
+
+
             }, function (error){
                     console.log(error);
             });

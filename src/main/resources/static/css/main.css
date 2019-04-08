@@ -31,6 +31,18 @@
     margin: 0 auto;
 }
 
+
+.smaller-font {
+    font-size: 0.8em;
+    line-height: 1.2em;
+    position:relative;
+    top:-1px;
+}
+
+.orange {
+    color:orange;
+}
+
 /* ===== New Semester ===== */
 
 #new_semester {
@@ -155,6 +167,29 @@
     justify-content: flex-end;
 }
 
+.kr-wins-detail button {
+    display: none;
+    font-size: 20px;
+    color: dodgerblue;
+    padding: 0px 5px;
+}
+
+.kr-wins-detail button:hover {
+    color: black;
+}
+
+.kr-wins-detail button:focus, .btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus  {
+    outline: none;
+}
+
+.btn.active, .btn:active {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+:focus {
+    outline: none;
+}
+
 .kr-wins-input {
     width: 50px;
     text-align: right;
@@ -210,11 +245,11 @@
     position:relative;
 }
 
-#controls .btn-primary, #controls .btn-danger {
+#controls .btn-edit, #controls .btn-cancel {
     float:left;
 }
 
-#controls .btn-success {
+#controls .btn-save {
     float:right;
 }
 
@@ -264,6 +299,15 @@
 
 .active-acc:after {
     content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+.accordion:hover i {
+    color:orange; /* change trophy-color to orange when hovering accoridion button */
+    transition: 0.4s;
+}
+
+.active-acc i {
+    color:orange;
 }
 
 /* ====== slider ========== */
@@ -333,7 +377,7 @@
 
 .ok {
     font-size: 30px !important;
-    padding: 5px;
+    padding: 0px 5px;
     color: dodgerblue;
     float:left;
     position:relative;
@@ -342,19 +386,19 @@
 .not{
     float:left;
     font-size: 30px!important;
-    padding: 5px;
+    padding: 0px 5px;
     color: lightgrey;
     position:relative;
     visibility: hidden;
     display: none;
 }
 
-.back {
-    float: left;
-    position: relative;
-    top: -53px;
-    left: 60px;
-}
+/*.back {*/
+    /*float: left;*/
+    /*position: relative;*/
+    /*top: -53px;*/
+    /*left: 60px;*/
+/*}*/
 
 #new_okr {
     display: flex;

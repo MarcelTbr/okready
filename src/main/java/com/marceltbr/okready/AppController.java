@@ -25,6 +25,12 @@ import java.util.stream.Collectors;
 public class AppController {
 
     @Autowired
+    private AppUserRepository appUserRepo;
+
+    @Autowired
+    private AppUserYearRepository appUserYearRepo;
+
+    @Autowired
     private YearRepository yearRepo;
 
     @Autowired
@@ -63,7 +69,7 @@ public class AppController {
             ArrayList<Map<String,Object>> okrArrayList = makeOKRArrayList(json, false);
 
 
-            List<Semester> semesterList = semesterRepo.findByValue(value);
+            List<Semester> semesterList = semesterRepo.findAllByValue(value);
 
             // get the semester of the given year from the list
             List<Semester> foundSemesterList = semesterList.stream().filter(s -> Objects.equals(s.getYearSemester().getYear().getYear(), yearNum))
@@ -100,9 +106,8 @@ public class AppController {
             ArrayList resultsList = (ArrayList) obj.get("results");
 
             return resultsList;
-        }).flatMap( results -> results.stream()).forEachOrdered(res ->{
+        }).flatMap( results -> results.stream() ).forEachOrdered(res ->{
                         System.out.println(res.toString());
-
 
                 Map<String,Object> resultMap = (Map<String,Object>) res;
                 long id = new Double ((Double) resultMap.get("id")).longValue();
@@ -148,17 +153,30 @@ public class AppController {
             //         ]
             //     }];
 
-            List<Semester> semesterList = semesterRepo.findByValue(semesterValue);
+            List<Semester> semesterList = semesterRepo.findAll();
 
             List<Semester> semesterFoundList = semesterList.stream().filter(semester -> Objects.equals(semester.getYearSemester().getYear().getYear(), year))
+                    .collect(Collectors.toList()).stream()
+                    .filter(sem -> Objects.equals(sem.getValue(), semesterValue))
                     .collect(Collectors.toList());
 
 
             if(semesterFoundList.size() > 0 ){
 
 
+                /** filter out semesters by user */
+                List<Semester> userSemesters = semesterFoundList.stream().filter(sem -> {
+
+                    String username = sem.getYearSemester().getYear().getAppUserYear().getAppUser().getUsername();
+
+                    return Objects.equals(username, auth.getName());
+
+                }).collect(Collectors.toList());
+
+
+
                 ArrayList<Map<String,Object>> objectiveArrayList = new ArrayList<>();
-                semesterFoundList.stream().forEach( semester -> {
+                userSemesters.stream().forEach( semester -> {
 
                     semester.getSemesterObjectives().stream().map(semObj -> semObj.getObjective()).forEach( objective -> {
 
@@ -169,13 +187,18 @@ public class AppController {
 
                         }).collect(Collectors.toList());
 
-                                    System.out.println(results.get(0).toString());
+                                    //System.out.println(results.get(0).toString());
+
+                        /** sort results by id **/
+                        List<Result> sortedResults = results.stream().sorted(Comparator.comparing(Result::getId))
+                                        .collect(Collectors.toList());
+
 
                         HashMap<String, Object> objectiveMap = new HashMap<String, Object>(){{
                             put("id", objective.getId());
                             put("title", objective.getTitle());
                             put("total_wins", objective.getTotal_wins());
-                            put("results", results);
+                            put("results", sortedResults);
                         }};
 
                         objectiveArrayList.add(objectiveMap);
@@ -223,66 +246,35 @@ public class AppController {
             JSONObject json = new JSONObject(semesterJson);
 
             Long yearNum = json.getLong("year");
-            Long value = json.getLong("value");
-            String name = json.getString("name");
+            Long value = json.getLong("value"); //semester Value
+            String name = json.getString("name"); //semester name
+
+            AppUser appUser = appUserRepo.findByUsername(auth.getName()).get(0);
+
+            List<Semester> foundSemesterList =
+                    appUserYearRepo.findAllByAppUser(appUser).stream().map(usrYear -> usrYear.getYear())
+                    .filter(year -> Objects.equals(year.getYear(), yearNum))
+                    .map(year -> year.getYearSemesters())
+                    .flatMap(yearSemesters -> yearSemesters.stream())
+                    .map(yearSem -> yearSem.getSemester())
+                    .filter(semester -> {
+                        long semesterValue = semester.getValue();
+
+                        return Objects.equals(value, semesterValue);
+                    })
+                    .collect(Collectors.toList());
 
 
+          if(foundSemesterList.size() > 0) {
 
-            List<Semester> semesterList = semesterRepo.findByValue(value);
+              return new ResponseEntity<>(makeMap("error", "Semester already there"), HttpStatus.CONFLICT);
 
+          } else {
 
-            Semester semester = null;
+              saveYearAndSemester(yearNum, value, name, json, auth);
 
-            if(semesterList != null){
-
-                //semester exists
-
-                // get the semester of the given year from the list
-                List<Semester> foundSemesterList = semesterList.stream().filter(s -> Objects.equals(s.getYearSemester().getYear().getYear(), yearNum))
-                        .collect(Collectors.toList());
-
-
-                if(foundSemesterList.size() > 0){
-
-                    //find out wether year is already defined for that semester
-                    Optional<Year> yearOptional = yearRepo.findByYearSemestersLike(foundSemesterList.get(0).getYearSemester());
-
-                    long yearFound = yearOptional.get().getYear();
-
-                    System.out.println("year found: " + yearFound);
-                    System.out.println("year saving: " + yearNum);
-
-                    if(Objects.equals(yearFound, yearNum)){
-
-                        //year and semester already there
-                        return new ResponseEntity<>(makeMap("error", "Semester already there"), HttpStatus.CONFLICT);
-
-
-                    } else {
-                        //semester exists but not from the same year
-
-                        saveYearAndSemester(yearNum, value, name, json);
-
-                        return new ResponseEntity<>(makeMap("success", "Semester Saved"), HttpStatus.ACCEPTED);
-                    }
-
-                } else {
-
-                    //year is not already there
-
-                    saveYearAndSemester(yearNum, value, name, json);
-
-                    return new ResponseEntity<>(makeMap("success", "Semester Saved"), HttpStatus.ACCEPTED);
-                }
-
-            } else {
-
-                //semester doesn't exist
-
-                saveYearAndSemester(yearNum, value, name, json);
-
-                return new ResponseEntity<>(makeMap("success", "Semester Saved"), HttpStatus.ACCEPTED);
-            }
+              return new ResponseEntity<>(makeMap("success", "Semester Saved"), HttpStatus.ACCEPTED);
+          }
 
 
         }else {
@@ -346,7 +338,7 @@ public class AppController {
         return okrArrayList;
     }
 
-    private void saveYearAndSemester(Long yearNum, Long value, String name, JSONObject json ) {
+    private void saveYearAndSemester(Long yearNum, Long value, String name, JSONObject json, Authentication auth ) {
 
         // turn a javascript object into an ArrayList
         ArrayList<Map<String,Object>> okrArrayList = makeOKRArrayList(json, true);
@@ -398,7 +390,11 @@ public class AppController {
         Year year = null;
         if(!yearList.isEmpty()){
             //if year exists, get it
-            year = yearList.get(0);
+            year = yearList.stream().filter( yr -> {
+                String username = yr.getAppUserYear().getAppUser().getUsername();
+
+                return Objects.equals(username, auth.getName());
+            }).collect(Collectors.toList()).get(0);
         } else{
             //otherwise create and save it
             year = new Year(yearNum); yearRepo.save(year);
@@ -406,6 +402,13 @@ public class AppController {
 
         YearSemester yearSemester = new YearSemester(year, semester);
         yearSemesterRepo.save(yearSemester);
+
+        AppUser appUser =  appUserRepo.findByUsername(auth.getName()).get(0);
+
+        AppUserYear appUserYear = new AppUserYear(year, appUser);
+        appUserYearRepo.save(appUserYear);
+
+        appUserRepo.save(appUser);
     }
 
     @RequestMapping("get_semesters")
@@ -414,8 +417,14 @@ public class AppController {
 
             List<Year> years = yearRepo.findAll();
 
+            List<Year> userYears = years.stream().filter(year -> {
 
-            Set<Object> yearsDTO = years.stream().map(year->{
+                String username = year.getAppUserYear().getAppUser().getUsername();
+
+                return Objects.equals(username, auth.getName());
+            }).collect(Collectors.toList());
+
+            Set<Object> yearsDTO = userYears.stream().map(year->{
 
                 Map<String, Object> yearObj = new HashMap<>();
 
