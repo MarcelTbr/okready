@@ -1,7 +1,7 @@
 'use strict'
 
-app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '$window', '$rootScope', '$route',
-    function($scope,  $http, $location, $interval, $window, $rootScope, $route){
+app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '$window', '$rootScope', '$route', 'toaster',
+    function($scope,  $http, $location, $interval, $window, $rootScope, $route, toaster){
 
         var vm = this;
         $rootScope.user = false;
@@ -76,6 +76,8 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                 //redirect
                 $window.location.href = "/view_semester/"+$rootScope.year + "/" + $rootScope.semester_index;
 
+
+
             });
 
 
@@ -93,11 +95,15 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                     vm.password = "";
 
                     localStorage.removeItem("open-okr-session");
-                    localStorage.removeItem("year");
-                    localStorage.removeItem("semester-index");
+                    //localStorage.removeItem("year");
+                    //localStorage.removeItem("semester-index");
                     $window.location.href = "/home";
                 });
              };
+
+
+
+
 
     }]);
 

@@ -10,6 +10,7 @@
             Edit
              <i class="far fa-edit white"></i>
             </button>
+
             <button class="btn btn-cancel" ng-click="cancelEditSemester()" ng-show="edit">
              <i class="far fa-window-close"></i>
              Cancel
@@ -22,6 +23,18 @@
         </div>
 
         <h3>OKR LIST</h3>
+
+        <button class="btn btn-collapse-all" ng-click="accCloseAll(semester.okr_array)">
+        Collapse All
+        <i class="fas fa-angle-double-up" ></i>
+        <!--<i class="far fa-caret-square-up"></i>-->
+        </button>
+        <button class="btn btn-expand-all" ng-click="accOpenAll(semester.okr_array)">
+        Expand All
+        <!--<i class="far fa-caret-square-down"></i>-->
+        <i class="fas fa-angle-double-down"></i>
+        </button>
+
         <div ng-model="okr" class="okr-item" ng-repeat="okr in semester.okr_array | orderBy: 'id'" ng-init="$i_out = $index">
             <button id="okr-{{$i_out}}" class="accordion" ng-click="accToggle($i_out)"><b>{{okr.total_wins}} <i class="smaller-font fas fa-trophy"></i> | {{okr.title}} </b>: <span ng-bind="calculateCompletion(okr)"></span></button>
             <div class="panel">

@@ -43,7 +43,25 @@
     color:orange;
 }
 
+.blue {
+    color: dodgerblue;
+    font-weight: bold;
+}
+
+#intro {
+    max-width: 480px;
+    margin:0 auto;
+    line-height: 30px;
+    text-align: justify;
+    margin-bottom: 75px;
+    padding: 0px 10px;
+}
+
 /* ===== New Semester ===== */
+
+#semester-save {
+    margin-bottom: 10px;
+}
 
 #new_semester {
     display: flex;
@@ -130,9 +148,17 @@
 
 /* ======= manage semesters ======= */
 
+#manage-semesters {
+    max-width: 600px;
+    margin: 0 auto;
+}
 
 
 /* ========== view semester ======== */
+
+.btn-collapse-all, .btn-expand-all {
+    margin-bottom: 10px;
+}
 
 #view_semester #okr_list{
     margin: 0 auto;
@@ -261,7 +287,7 @@
 
 /* Style the buttons that are used to open and close the accordion panel */
 .accordion {
-    background-color: #ccc;
+    background-color: rgba(30,144, 255, 0.6); /*rgba(255,152, 0, 0.6);*/
     color: black;
     cursor: pointer;
     padding: 18px;
@@ -392,13 +418,6 @@
     visibility: hidden;
     display: none;
 }
-
-/*.back {*/
-    /*float: left;*/
-    /*position: relative;*/
-    /*top: -53px;*/
-    /*left: 60px;*/
-/*}*/
 
 #new_okr {
     display: flex;

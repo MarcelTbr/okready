@@ -231,7 +231,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.authorizeRequests()
 				.antMatchers("/", "/index.html", "/app/login", "/app/logout", "/js/**", "/img/**", "/css/**",
-						"/bower_components/**", "/home", "/partials/home.html", "/session_expired", "/partials/session_expired.html").permitAll()
+						"/bower_components/**", "/fontawesome-free-5.8.1-web/**", "/home", "/partials/home.html", "/session_expired", "/partials/session_expired.html").permitAll()
 				.antMatchers("/**", "/partials/**", "/api/**").hasAnyAuthority("USER")
 				.anyRequest().fullyAuthenticated();
 

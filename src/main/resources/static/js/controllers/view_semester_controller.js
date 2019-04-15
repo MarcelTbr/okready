@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$interval', '$window', '$rootScope', '$routeParams',
-    function ($scope, $http, $location, $interval, $window, $rootScope, $routeParams) {
+app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$interval', '$window', '$rootScope', '$routeParams', 'toaster', '$timeout',
+    function ($scope, $http, $location, $interval, $window, $rootScope, $routeParams, toaster, $timeout) {
 
 
         //temporary mockup code
@@ -58,6 +58,56 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
         }
 
     };
+
+    $scope.accOpenAll = function (okrs) {
+
+        var acc = document.getElementsByClassName("accordion");
+
+        for (var i = 0; i < okrs.length; i++){
+
+            var activeAcc = acc[i].classList.contains("active-acc");
+
+            // console.log(acc[i].classList);
+            //
+            // console.log(acc[i].classList.value.indexOf("active-acc"));
+            //
+            // console.log(activeAcc);
+
+            if(!activeAcc) acc[i].classList.add("active-acc");
+
+            var panel = acc[i].nextElementSibling;
+            panel.style.display = "block";
+
+        }
+
+    };
+
+    $scope.accCloseAll = function (okrs) {
+
+        var acc = document.getElementsByClassName("accordion");
+
+        for (var i = 0; i < okrs.length; i++){
+
+            var activeAcc = acc[i].classList.value.indexOf("active-acc") !== -1;
+
+            console.log(acc[i].classList);
+
+            console.log(acc[i].classList.value.indexOf("active-acc"));
+
+            console.log(activeAcc);
+
+            //acc[i].classList.toggle("active-acc", !activeAcc);
+
+            if (activeAcc) acc[i].classList.remove("active-acc");
+
+            console.log(acc[i].classList);
+
+            var panel = acc[i].nextElementSibling;
+            panel.style.display = "none";
+
+        }
+
+    }
 
     // toggle kr edit
 
@@ -116,6 +166,7 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
 
             $scope.edit = true;
         };
+
         $scope.cancelEditSemester = function() {
 
             $("span.toggle-kr-edit").css("display", "none");
@@ -124,19 +175,39 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
             $(".kr-wins-input").prop("disabled", true).css({color: "black", backgroundColor: "whitesmoke"});
 
             $scope.edit = false;
+
+            $http.get("api/get_semester/"+ $routeParams.year + "/" + $routeParams.semester_value)
+                .then(function(response){
+
+                    console.log("api/get_semester...");
+                    console.log(response.data);
+
+                    $scope.semester = response.data.semesterDTO;
+
+                    $timeout(function(){
+                        $scope.accCloseAll($scope.semester.okr_array);
+                    }, 50);
+
+                },function(error){
+                    alert("There was an error");
+                    console.log(error);
+
+                    $timeout(function(){
+                        $scope.accCloseAll($scope.semester.okr_array);
+                    }, 50);
+                });
+
         };
 
         $scope.minus1 = function($i_out, $i_in) {
 
-            var wins_input = $("#kr-wins-" + $i_out + "" + $i_in);
             $scope.semester.okr_array[$i_out].results[$i_in].wins -= 1;
 
         };
 
         $scope.plus1 = function($i_out, $i_in) {
 
-            var wins_input = $("#kr-wins-" + $i_out + "" + $i_in);
-            var input_wins = $scope.semester.okr_array[$i_out].results[$i_in].wins += 1;
+            $scope.semester.okr_array[$i_out].results[$i_in].wins += 1;
 
         };
 
@@ -160,16 +231,31 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
             }
             }).then(function(response){
 
-                    console.log(response);
+                console.log(response);
 
-                    $scope.cancelEditSemester();
+               var cancelPromise = Promise.resolve( $scope.cancelEditSemester() );
 
-                    alert("Semester progress successfully saved!")
+                cancelPromise.then( $timeout(function(){
+                        $scope.accOpenAll($scope.semester.okr_array);
+                    }, 100)
+                );
+
+                toaster.success("Semester progress successfully saved!");
 
 
 
             }, function (error){
-                    console.log(error);
+
+                console.log(error);
+
+                var cancelPromise = Promise.resolve( $scope.cancelEditSemester() );
+
+                cancelPromise.then( $timeout(function(){
+                        $scope.accOpenAll($scope.semester.okr_array);
+                    }, 100)
+                );
+
+                    toaster.warning("Sorry, your progress could not be saved.");
             });
 
         };

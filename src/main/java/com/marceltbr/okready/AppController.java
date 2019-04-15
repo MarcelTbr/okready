@@ -208,13 +208,20 @@ public class AppController {
 
                 });
 
+                /** sort objectives by id **/
+
+                List<Map<String,Object>> sortedObjectiveArrayList =  objectiveArrayList.stream().sorted(Comparator.comparing(obj-> (long) obj.get("id")))
+                        .collect(Collectors.toList());
+
+
+
                 HashMap<String, Object> semesterDTO = new HashMap<String, Object>(){{
 
                     Semester semester = semesterFoundList.get(0);
 
                     put("name", semester.getName());
                     put("value", semester.getValue());
-                    put("okr_array", objectiveArrayList);
+                    put("okr_array", sortedObjectiveArrayList);
 
 
                 }};

@@ -1,7 +1,7 @@
 'use strict'
 
-app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval', '$timeout', '$window', '$rootScope',
-    function ($scope, $http, $location, $interval, $timeout, $window, $rootScope) {
+app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval', '$timeout', '$window', '$rootScope', 'toaster',
+    function ($scope, $http, $location, $interval, $timeout, $window, $rootScope, toaster) {
 
         function addClass(el, className) {
             if (el.classList)
@@ -143,7 +143,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
 
 
                     } else{
-                        alert("please make sure you all fields are full and checked");
+                        toaster.warning("Please make sure all fields are full and checked");
                     }
 
                    break;
@@ -188,12 +188,12 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                                 $timeout($('#kr_title').focus(), 1000);
 
                             } else {
-                                alert("Sorry it's better to have only a handful of key results."
+                                toaster.info("Sorry it's better to have only a handful of key results."
                                     + "\n You can now save your objective");
                             }
                         }
                     } else {
-                        alert("Please fill in your key result fields and check the blue boxes to add an objective.");
+                        toaster.warning("Please fill in your key result fields and check the blue boxes to add an objective.");
                     }
 
                     break;
@@ -226,7 +226,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                         }, 0);
 
                     }else {
-                        alert("Sorry you can only have a handful of OKRs");
+                        toaster.warning("Sorry you can only have a handful of OKRs");
                     }
                     break;
             }
@@ -302,8 +302,9 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
         /* ======= save objectives api call ======= */
 
         $scope.saveOKR = function(){
-            alert($scope.form1.year + " " + $scope.form1.semester.value);
+            //alert($scope.form1.year + " " + $scope.form1.semester.value);
 
+            toaster.info("Saving in progress");
 
             //delete undefined key results if any
 
@@ -359,6 +360,8 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
 
                 $location.path( "/view_semester/" + $rootScope.year + "/" + $rootScope.semester_index);
 
+                toaster.success("Semester successfully saved!");
+
             }, function(error){
 
                 console.log(error);
@@ -383,7 +386,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                     $scope.ok('objective_title', 11);
                     $objective_wins.focus();
                 } else {
-                    alert ("Please define your objective title");
+                    toaster.info("Please define your objective title");
                 }
             }
         });
@@ -396,7 +399,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                     $scope.ok('objective_wins', 12);
                     $('#next2').focus();
                 } else {
-                    alert("Please define the number of wins for your objective");
+                    toaster.info("Please define the number of wins for your objective");
                 }
 
             }
@@ -419,7 +422,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                     $scope.ok('kr_title', 1);
                     $kr_wins.focus();
                 } else {
-                    alert("Please define the title for your Key Result");
+                    toaster.info("Please define the title for your Key Result");
                 }
 
             }
@@ -434,7 +437,7 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
                     $scope.ok('kr_wins', 2);
                     $('#add_kr_btn').focus();
                 } else {
-                    alert("Please define the number of wins for your Key Result");
+                    toaster.info("Please define the number of wins for your Key Result");
                 }
 
             }
