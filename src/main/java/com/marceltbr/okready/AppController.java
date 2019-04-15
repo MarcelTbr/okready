@@ -55,6 +55,24 @@ public class AppController {
      * ======== ENDPOINTS ========
      */
 
+    @RequestMapping("delete_semester/{id}")
+    public ResponseEntity<Map<String,Object>> deleteSemester(Authentication auth, @PathVariable long id) {
+
+        if (auth != null) {
+
+
+                semesterRepo.delete(id);
+
+                return new ResponseEntity<>(makeMap("success", "Semester Deleted"), HttpStatus.ACCEPTED);
+
+
+        } else {
+
+        return new ResponseEntity<>(makeMap("error", "User not authenticated"), HttpStatus.FORBIDDEN);
+
+        }
+    }
+
     @RequestMapping( value = "save_semester_edit", method = RequestMethod.POST)
     public ResponseEntity<Map<String,Object>>saveSemesterEdit(@RequestBody String semesterJson, Authentication auth) {
 
@@ -439,7 +457,7 @@ public class AppController {
 
                     Map<String, Object> semesterObj = new HashMap<>();
                     Semester semester = yearSem.getSemester();
-
+                    semesterObj.put("id", semester.getId());
                     semesterObj.put("name", semester.getName());
                     semesterObj.put("value", semester.getValue());
                     semesterObj.put("okr_array", makeOkrObj(semester));

@@ -78,6 +78,10 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
 
 
 
+            }, function(error){
+                console.log(error);
+
+                toaster.error("Sorry, login failed. Please try again.");
             });
 
 

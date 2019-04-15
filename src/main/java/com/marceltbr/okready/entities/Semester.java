@@ -19,7 +19,7 @@ public class Semester {
     @OneToOne(mappedBy="semester", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     private YearSemester yearSemester;
 
-    @OneToMany(mappedBy="semester", fetch= FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="semester", fetch= FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<SemesterObjective> semesterObjectives;
 
     public Semester(){}

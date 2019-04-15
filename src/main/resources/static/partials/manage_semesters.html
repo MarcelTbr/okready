@@ -1,22 +1,35 @@
 <main class="container" >
     <h3 class="center">Manage Semesters</h3>
 
-    <div id="manage-semesters" ng-repeat="year in yearsDTO | orderBy: '-year'">
+    <div id="manage-semesters">
+
+            <button class="btn btn-edit" ng-click="allowEditSemesters()" ng-if="!editSemesters">
+            <i class="far fa-edit"></i>
+            Edit Semesters
+            </button>
+            <button class="btn btn-cancel" ng-click="cancelEditSemesters()" ng-if="editSemesters">
+            <i class="far fa-window-close"></i>
+            Cancel
+            </button>
+
+    <div  ng-repeat="year in yearsDTO | orderBy: '-year'">
          <button class="accordion" ng-click="accToggle($index)"><b>{{year.year}}</b></button>
             <div class="panel">
               <ul class="kr_list">
-                  <a href="/view_semester/{{year.year}}/{{semester.value}}" ng-repeat="semester in year.semesters | orderBy: 'value'" ng-click="lastSemesterViewed(year.year, semester.value)">
+                 <div ng-repeat="semester in year.semesters | orderBy: 'value'">
                       <li  class="kr bg-primary text-white shadow rounded">
+                       <a href="/view_semester/{{year.year}}/{{semester.value}}"  ng-click="lastSemesterViewed(year.year, semester.value)">
                           <span>{{semester.name}}</span>
-
                           <span ng-bind="calculateCompletion(semester)"></span>
-
+                       </a>
+                           <i ng-if="semester.id != 2 && editSemesters" class="far fa-trash-alt" ng-click="deleteSemester(semester.id, year.year, semester.name)"></i>
                       </li>
-                  </a>
+                  </div>
               </ul>
             </div>
 
     </div>
 
+    </div>
 
 </main>

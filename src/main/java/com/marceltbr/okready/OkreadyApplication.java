@@ -146,6 +146,7 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 			AppUserYear appUserYear2 = new AppUserYear(year2, guest);//link year to user
 			appUserYearRepo.save(appUserYear2);
 
+			//create 1st semester of 2019
 			Semester sem2 = new Semester(1, "1st");
 			semesterRepository.save(sem2);
 			YearSemester yearSemester2 = new YearSemester(year2, sem2);
@@ -155,25 +156,49 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 			Objective objective2 = new Objective("Do Sport", 120L);
 			objectiveRepo.save(objective2);
 
-			//create semesterObjectives
-			SemesterObjective semObj2 = new SemesterObjective(sem2, objective2);
-			semesterObjectiveRepo.save(semObj2);
+				//create semesterObjectives
+				SemesterObjective semObj2 = new SemesterObjective(sem2, objective2);
+				semesterObjectiveRepo.save(semObj2);
 
-			//create results
-			Result result11 = new Result("Go Swimming", 10L, 5L);
-			Result result12 = new Result("Go Jogging", 5L, 8L);
-			Result result13 = new Result("Miss training", -5L, 2L);
+				//create results
+				Result result11 = new Result("Go Swimming", 10L, 5L);
+				Result result12 = new Result("Go Jogging", 5L, 8L);
+				Result result13 = new Result("Miss Training", -5L, 2L);
 
-			resultRepo.save(result11); resultRepo.save(result12); resultRepo.save(result13);
+				resultRepo.save(result11); resultRepo.save(result12); resultRepo.save(result13);
 
-			//create objectiveResults
+				//create objectiveResults
+				ObjectiveResult objRes11 = new ObjectiveResult(objective2, result11);
+				ObjectiveResult objRes12 = new ObjectiveResult(objective2, result12);
+				ObjectiveResult objRes13 = new ObjectiveResult(objective2, result13);
 
-			ObjectiveResult objRes11 = new ObjectiveResult(objective2, result11);
-			ObjectiveResult objRes12 = new ObjectiveResult(objective2, result12);
-			ObjectiveResult objRes13 = new ObjectiveResult(objective2, result13);
+				objectiveResultRepo.save(objRes11);objectiveResultRepo.save(objRes12);
+				objectiveResultRepo.save(objRes13);
 
-			objectiveResultRepo.save(objRes11);objectiveResultRepo.save(objRes12);
-			objectiveResultRepo.save(objRes13);
+			//create another objective
+			Objective objective3 = new Objective("Increment Sales", 500L);
+			objectiveRepo.save(objective3);
+
+				//create semesterObjectives
+				SemesterObjective semObj3 = new SemesterObjective(sem2, objective3);
+				semesterObjectiveRepo.save(semObj3);
+
+				//create results
+				Result result21 = new Result("Sell one product/service", 10L, 25L);
+				Result result22 = new Result("Make a comercial call to potential buyers.", 5L, 40L);
+				Result result23 = new Result("Do a Social Media Ad", 10L, 2L);
+
+				resultRepo.save(result21); resultRepo.save(result22); resultRepo.save(result23);
+
+				//create objectiveResults
+				ObjectiveResult objRes21 = new ObjectiveResult(objective3, result21);
+				ObjectiveResult objRes22 = new ObjectiveResult(objective3, result22);
+				ObjectiveResult objRes23 = new ObjectiveResult(objective3, result23);
+
+				objectiveResultRepo.save(objRes21);objectiveResultRepo.save(objRes22);
+				objectiveResultRepo.save(objRes23);
+
+
 
 
 
@@ -230,7 +255,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http.authorizeRequests()
-				.antMatchers("/", "/index.html", "/app/login", "/app/logout", "/js/**", "/img/**", "/css/**",
+				.antMatchers("/", "/index.html", "/app/login", "/app/logout", "/js/**", "/img/**", "/css/**", "/img/**",
 						"/bower_components/**", "/fontawesome-free-5.8.1-web/**", "/home", "/partials/home.html", "/session_expired", "/partials/session_expired.html").permitAll()
 				.antMatchers("/**", "/partials/**", "/api/**").hasAnyAuthority("USER")
 				.anyRequest().fullyAuthenticated();

@@ -1,7 +1,7 @@
 'use strict'
 
-app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval', '$timeout', '$window', '$rootScope', 'toaster',
-    function ($scope, $http, $location, $interval, $timeout, $window, $rootScope, toaster) {
+app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval', '$timeout', '$window', '$rootScope', 'toaster', '$route',
+    function ($scope, $http, $location, $interval, $timeout, $window, $rootScope, toaster, $route) {
 
         function addClass(el, className) {
             if (el.classList)
@@ -365,6 +365,16 @@ app.controller('NewOkrController', ['$scope', '$http', '$location', '$interval',
             }, function(error){
 
                 console.log(error);
+
+                if(error.status === 409) {
+
+                    toaster.error("Sorry semester already exists.");
+
+                } else {
+                    toaster.error("Sorry could not save semester.");
+                }
+
+                $route.reload();
             });
         };
 

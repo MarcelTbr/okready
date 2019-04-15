@@ -20,12 +20,12 @@ public class Objective {
 
     long total_wins;
 
-    @OneToOne(mappedBy="objective", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy="objective", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn( name="semester_objective_id")
     private SemesterObjective semesterObjective;
 
 
-    @OneToMany(mappedBy = "objective", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "objective", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<ObjectiveResult> objectiveResults;
 
     public Objective () {}

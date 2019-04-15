@@ -1,7 +1,7 @@
 'use strict'
 
-app.controller('ManageSemestersController', ['$scope', '$http', '$location', '$interval', '$window', '$rootScope',
-    function($scope,  $http, $location, $interval, $window, $rootScope){
+app.controller('ManageSemestersController', ['$scope', '$http', '$location', '$interval', '$window', '$rootScope', 'toaster', '$route',
+    function($scope,  $http, $location, $interval, $window, $rootScope, toaster, $route){
 
 
         $http.get("api/get_semesters")
@@ -59,6 +59,55 @@ app.controller('ManageSemestersController', ['$scope', '$http', '$location', '$i
             localStorage.setItem("semester-index", semester_index);
         };
 
+
+
+        $scope.deleteSemester = function (id, year, semesterName) {
+
+
+            var warningProm = Promise.resolve ( toaster.warning(
+                {
+                    title: 'Delete ' + semesterName + ' semester of ' + year + '?',
+                    body: 'bind-confirm-deletion',
+                    closeButton: false,
+                    bodyOutputType: 'directive'
+
+                })
+            );
+
+                warningProm.then(function(){
+                document.getElementById('doDeleteSem').addEventListener('click', function(){
+
+                    $http.get("api/delete_semester/"+id )
+                        .then(function(response){
+
+                            console.log(response);
+
+                            toaster.success("Semester deleted.");
+
+                            $route.reload();
+
+                        }, function(error){
+
+                            console.log(error);
+
+                        });
+                });
+
+            });
+
+        };
+
+        $scope.editSemesters = false;
+
+        $scope.allowEditSemesters = function () {
+
+            $scope.editSemesters = true;
+        };
+
+        $scope.cancelEditSemesters = function () {
+
+            $scope.editSemesters = false;
+        };
 
 
     }]);

@@ -15,7 +15,7 @@ public class ObjectiveResult {
     @JoinColumn(name="objective_id")
     private Objective objective;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name="result_id")
     private Result result;
 

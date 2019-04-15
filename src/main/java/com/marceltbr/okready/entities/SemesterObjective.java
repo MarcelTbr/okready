@@ -13,7 +13,7 @@ public class SemesterObjective {
     @JoinColumn(name="semester_id")
     private Semester semester;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name="objective_id")
     private Objective objective;
 

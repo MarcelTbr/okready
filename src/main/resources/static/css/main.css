@@ -9,6 +9,34 @@
     background: dodgerblue;
 }
 
+#home {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: right;
+    height: 100%;
+    width:100%;
+    /*max-width: 1280px;*/
+    margin: 0 auto;
+}
+
+@media screen and (max-width: 1000px ) {
+    #home {
+        background-position: 75%, right;
+    }
+}
+
+#intro {
+    background-color: rgba(100%, 100%, 100%, 0.75);
+}
+
+nav.navbar {
+    border: none;
+}
+
+nav.navbar.navbar-primary {
+    margin-bottom: 0px;
+}
+
 .home a{
     background: dodgerblue;
     color: white;
@@ -46,6 +74,10 @@
 .blue {
     color: dodgerblue;
     font-weight: bold;
+}
+
+#home .white {
+    color:white;
 }
 
 #intro {
@@ -152,6 +184,60 @@
     max-width: 600px;
     margin: 0 auto;
 }
+
+#manage-semesters .kr:hover {
+    background-color: orange;
+    text-decoration: none;
+}
+
+a:-webkit-any-link {
+    text-decoration: none;
+}
+
+#manage-semesters > button.btn {
+    font-size: 16px;
+    color: dodgerblue;
+    padding: 0px 5px;
+    margin-bottom:10px;
+}
+
+#manage-semesters > button.btn:hover {
+    color: black;
+}
+
+#manage-semesters li i {
+    padding:2.5px 5px;
+    margin-left: 10px;
+}
+
+#manage-semesters li i:hover {
+    color: firebrick !important;
+    cursor: pointer;
+
+}
+
+#manage-semesters li {
+    display:flex;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+#manage-semesters li a {
+    color: white;
+    display:flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#manage-semesters i {
+    display:inline-block;
+}
+
+#doDeleteSem, #notDeleteSem {
+    margin-left: 15px;
+    margin-top:10px;
+}
+
 
 
 /* ========== view semester ======== */

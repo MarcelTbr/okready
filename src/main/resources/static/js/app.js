@@ -36,3 +36,11 @@ app.config(['$routeProvider', '$locationProvider', '$stateProvider', '$urlRouter
     });
 
 }]);
+
+app.directive('bindConfirmDeletion', [function () {
+    return {
+        template:
+        "<button type='button'  id='doDeleteSem' class='btn btn-success clear'>Yes</button>" +
+        "<button type='button'  id='notDeleteSem' class='btn btn-danger clear'>No</button>"
+    };
+}]);
