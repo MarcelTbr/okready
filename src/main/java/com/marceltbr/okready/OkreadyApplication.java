@@ -100,7 +100,7 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 		return (args) -> {
 
 			//create admin user
-			AppUser admin = new AppUser("admin123", "admin123");
+			AppUser admin = new AppUser("pinguso77", "pinguso77");
 			appUserRepository.save(admin);
 
 			//create initial year and semester data
