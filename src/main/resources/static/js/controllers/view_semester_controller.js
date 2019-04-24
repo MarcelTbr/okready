@@ -4,33 +4,6 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
     function ($scope, $http, $location, $interval, $window, $rootScope, $routeParams, toaster, $timeout) {
 
 
-        //temporary mockup code
-
-
-        //$scope.semester = {
-        //            name: "1st",
-        //            okr_array: [],
-        //            value: 1
-
-
-        // $scope.okr_array = [
-        //     {   title: "something",
-        //         total_wins: 50,
-        //         results: [
-        //             {title: "something else", wins_ratio: 1, wins: 8},
-        //             {title: "something else", wins_ratio: 1, wins: 8}
-        //         ]
-        //     },
-        //     {   title: "something",
-        //         total_wins: 50,
-        //         results: [
-        //             {title: "something else", wins_ratio: 1, wins: 8},
-        //             {title: "something else", wins_ratio: 1, wins: 8}
-        //         ]
-        //     }];
-
-
-     //get semesters, temporary mockup data
     $http.get("api/get_semester/"+ $routeParams.year + "/" + $routeParams.semester_value)
         .then(function(response){
 
@@ -40,7 +13,9 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
             $scope.semester = response.data.semesterDTO;
 
         },function(error){
-            alert("There was an error");
+            if(error.status === 409){
+                toaster.info("Last viewed semester could not be found. Please visit Manage Semesters to select which semester you want to view.");
+            }
             console.log(error);
         });
 
@@ -90,13 +65,11 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
 
             var activeAcc = acc[i].classList.value.indexOf("active-acc") !== -1;
 
-            console.log(acc[i].classList);
-
-            console.log(acc[i].classList.value.indexOf("active-acc"));
-
-            console.log(activeAcc);
-
-            //acc[i].classList.toggle("active-acc", !activeAcc);
+            // console.log(acc[i].classList);
+            //
+            // console.log(acc[i].classList.value.indexOf("active-acc"));
+            //
+            // console.log(activeAcc);
 
             if (activeAcc) acc[i].classList.remove("active-acc");
 
@@ -107,7 +80,7 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
 
         }
 
-    }
+    };
 
     // toggle kr edit
 
@@ -263,4 +236,4 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
 
 
 
-        }]);
+}]);

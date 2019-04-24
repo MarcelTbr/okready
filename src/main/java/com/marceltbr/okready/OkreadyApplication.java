@@ -234,7 +234,7 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 
 				if (!users.isEmpty()) {
 					AppUser user = users.get(0);
-					System.out.println("users is not empty");
+					//System.out.println("users is not empty");
 					return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
 							AuthorityUtils.createAuthorityList("USER"));
 				} else {

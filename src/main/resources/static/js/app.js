@@ -11,8 +11,8 @@ app.config(['$routeProvider', '$locationProvider', '$stateProvider', '$urlRouter
         templateUrl:'partials/home.html',
         activetab: 'home'
     }).when('/new_semester', {
-        templateUrl: 'partials/new_okr.html',
-        controller: 'NewOkrController',
+        templateUrl: 'partials/new_semester.html',
+        controller: 'NewSemesterController',
         activetab: 'new'
     }).when('/manage_semesters', {
         templateUrl: 'partials/manage_semesters.html',
