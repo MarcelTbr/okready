@@ -40,7 +40,11 @@
             <div class="panel">
                 <div class="completion">
 
-                    <p>Completion: <span ng-bind="calculateCompletion(okr)"></span></p>
+                    <div class="completion-bar-cont">
+                        <div class="completion-bar" style="width:{{calculateCompletion(okr)}};">
+                            <p class="completion-tag" >Completion: <span ng-bind="calculateCompletion(okr)"></span></p>
+                        </div>
+                    </div>
 
                 </div>
                 <ul class="kr_list">
@@ -58,7 +62,7 @@
                             <button id="minus1-{{$i_out}}{{$i_in}}"class="btn" ng-click="minus1($i_out, $i_in)">
                                 <i class="far fa-minus-square"></i>
                             </button>
-                            <input ng-model="kr.wins" type="number" id="kr-wins-{{$i_out}}{{$i_in}}" class="kr-wins-input" value="{{kr.wins}}" disabled>
+                            <input ng-model="kr.wins" type="number" min="-999" max="999" id="kr-wins-{{$i_out}}{{$i_in}}" class="kr-wins-input" value="0" disabled> <!-- value="{{kr.wins}}" -->
                             <button id="plus1-{{$i_out}}{{$i_in}}" class="btn" ng-click="plus1($i_out, $i_in)">
                                 <i class="far fa-plus-square"></i>
                             </button>
@@ -68,8 +72,6 @@
                                     <i id="ok-kr-{{$i_out}}{{$i_in}}" class="ok-kr fa fa-check-square-o" ng-click="ok_kr($i_out , $i_in)"></i></input>
                                 </div>
                             </span>-->
-                        </div>
-
                         </div>
                       </div>
                   </div>

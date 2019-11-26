@@ -168,7 +168,8 @@ nav.navbar.navbar-primary {
     padding: 5px;
     margin-bottom: 5px;
     box-shadow: 0 0 8px darkgrey;
-    border-radius: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
     display: flex;
     justify-content: space-between;
 }
@@ -246,6 +247,32 @@ a:-webkit-any-link {
 
 /* ========== view semester ======== */
 
+/* ----  #completion-bar ----*/
+
+ .completion-bar-cont {
+     border: 1px solid lightgrey;
+     width: 100%;
+     margin-bottom: 10px;
+     height: 30px;
+ }
+
+ .completion-bar {
+     height: inherit;
+     background-color: rgb(255,165, 0);
+     width: 0%; /* override negative values */
+     max-width:100%;
+ }
+
+ .completion-tag{
+     position: absolute;
+     margin-left: auto;
+     margin-right: auto;
+     left: 0;
+     right: 0;
+ }
+
+ /* ---- end of #completion-bar ----*/
+
 .btn-collapse-all, .btn-expand-all {
     margin-bottom: 10px;
 }
@@ -255,8 +282,8 @@ a:-webkit-any-link {
 }
 
 #view_semester #okr_list  .kr_list li {
-    font-size: 22px;
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 400;
 }
 
 .kr-wins-detail {
@@ -266,7 +293,8 @@ a:-webkit-any-link {
     border: 1px solid lightgrey;
     position: relative;
     top: -5px;
-    border-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
     color: black;
     padding: 5px;
     box-shadow: 0 0 2px darkgrey;

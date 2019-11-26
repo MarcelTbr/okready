@@ -145,7 +145,6 @@ public class AppController {
     @RequestMapping(value = "/save_semester", method = RequestMethod.POST)
     public ResponseEntity<Map<String,Object>>saveSemester(@RequestBody String semesterJson, Authentication auth){
 
-
         if(auth != null) {
 
             JSONObject json = new JSONObject(semesterJson);
@@ -438,8 +437,19 @@ public class AppController {
         List<Year> yearList =  yearRepo.findByYear(yearNum);
         Year year = null;
         if(!yearList.isEmpty()){
-            //if year exists, get it
-            year = findYearsForCurrentUser(auth, yearList).get(0);
+            //check if year exists for logged user...
+                 List<Year> userYears =  findYearsForCurrentUser(auth, yearList);
+
+                 if (userYears.isEmpty()){
+                     //if year exists but for other user, create a new year for this user
+                     year = new Year(yearNum); yearRepo.save(year);
+
+                 } else {
+                     //else if it exists, get it.
+                     year = userYears.get(0);
+                 }
+
+
         } else{
             //otherwise create and save it
             year = new Year(yearNum); yearRepo.save(year);

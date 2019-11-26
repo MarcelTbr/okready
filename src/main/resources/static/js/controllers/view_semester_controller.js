@@ -124,7 +124,7 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
                     actual_wins += result.winsRatio * result.wins;
                 }
 
-            return Math.round(actual_wins * 100 / total_wins) + " %";
+            return Math.round(actual_wins * 100 / total_wins) + "%";
         };
 
 

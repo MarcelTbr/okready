@@ -230,7 +230,7 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 			public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 				List<AppUser> users = appUserRepo.findByUsername(username);
 
-				System.out.println("Username: " + username);
+				//System.out.println("Username: " + username);
 
 				if (!users.isEmpty()) {
 					AppUser user = users.get(0);
