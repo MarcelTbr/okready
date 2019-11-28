@@ -100,7 +100,7 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 		return (args) -> {
 
 			//create admin user
-			AppUser admin = new AppUser("pinguso77", "pinguso77");
+			AppUser admin = new AppUser("pinguso87", "pinguso87");
 			appUserRepository.save(admin);
 
 			//create initial year and semester data
@@ -256,7 +256,8 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.authorizeRequests()
 				.antMatchers("/", "/index.html", "/app/login", "/app/logout", "/js/**", "/img/**", "/css/**", "/img/**",
-						"/bower_components/**", "/fontawesome-free-5.8.1-web/**", "/home", "/partials/home.html", "/session_expired", "/partials/session_expired.html").permitAll()
+						"/bower_components/**", "/fontawesome-free-5.8.1-web/**", "/home", "/partials/home.html", "/session_expired",
+						"/partials/session_expired.html", "/favicon.ico", "/trophy_favicon/**").permitAll()
 				.antMatchers("/**", "/partials/**", "/api/**").hasAnyAuthority("USER")
 				.anyRequest().fullyAuthenticated();
 
