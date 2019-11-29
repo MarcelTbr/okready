@@ -1,7 +1,7 @@
 'use strict'
 
-app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '$window', '$rootScope', '$route', 'toaster',
-    function($scope,  $http, $location, $interval, $window, $rootScope, $route, toaster){
+app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '$timeout', '$window', '$rootScope', '$route', '$routeParams', 'toaster',
+    function($scope,  $http, $location, $interval, $timeout, $window, $rootScope, $route, $routeParams, toaster){
 
         var vm = this;
         $rootScope.user = false;
@@ -11,11 +11,11 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
 
         function checkSession() {
 
-            var pass = localStorage.getItem("open-okr-session");
-           if(pass === null){
+            var openSes = localStorage.getItem("open-okr-session");
+           if(openSes === null || openSes !== "yes"){
 
                var page =  $window.location.href;
-               if(page != "/home"){
+               if(page !== "/home"){
                    page = "/home";
                }
            } else {
@@ -24,7 +24,57 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
 
         }
 
+        function handleErrors(){
+
+            var page =  $window.location.pathname;
+
+            console.log("page: " + page);
+
+            var p = page.substring(0,11);
+            var e = parseInt($routeParams.error);
+            console.log(p);
+            console.log(e);
+            console.log($routeParams.error);
+
+            var message = "Something Happened...";
+            var title = "Error";
+            switch(e){
+                case 404: title="Page Not Found"; message="Sorry, we could not find that page... Will redirect you soon.";$timeout(function(){
+                    $window.location.href = "/home";        }, 5000);  break;
+                case 401: title="Unauthorized"; message = "Sorry, you are not authorized to see this page. Please log in.";break;
+                case 500: title="Uups!"; message = "Sorry, something happened... We'll redirect you soon.";$timeout(function(){
+                    $window.location.href = "/home";        }, 5000)    ;break;
+            }
+
+            $scope.error_message = message;
+            $scope.error= title;
+        }
+
+
+        function sessionExpired(){
+
+            var page =  $window.location.pathname;
+
+            console.log("page: " + page);
+
+            if(page == "/session_expired"){
+
+                console.log("session_expired");
+
+                logout();
+
+                $timeout(function(){
+                $window.location.href = "/home";
+                }, 5000)    ;
+            }
+        }
+
+
+        sessionExpired();
+        handleErrors();
         checkSession();
+        //TODO make a session check that goes to back end not the browser's local storage
+
 
         //load last viewed semester
         lastViewedSemester();
@@ -82,32 +132,38 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                 console.log(error);
 
                 toaster.error("Sorry, login failed. Please try again.");
+
+                console.log("Error Status:");
+                console.log(error.status);
             });
 
 
         };
 
 
-        vm.LogmeOut = function(){
+        function logout(){
             $http({
                 url: "/app/logout",
                 method: "POST",
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             }).then(function(response) {
-                    console.log("logged-out!");
-                   $rootScope.user = false;
-                    vm.password = "";
+                console.log("logged-out!");
+                $rootScope.user = false;
+                vm.password = "";
 
-                    localStorage.removeItem("open-okr-session");
-                    //localStorage.removeItem("year");
-                    //localStorage.removeItem("semester-index");
-                    $window.location.href = "/home";
-                });
-             };
-
+                localStorage.removeItem("open-okr-session");
+                //localStorage.removeItem("year");
+                //localStorage.removeItem("semester-index");
+            });
+        };
 
 
 
+        vm.LogmeOut = function() {
 
+            logout();
+            $window.location.href = "/home";
+
+        };
     }]);
 

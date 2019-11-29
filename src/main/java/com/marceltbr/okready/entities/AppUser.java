@@ -19,7 +19,7 @@ public class AppUser {
 
     private String password;
 
-    @OneToMany(mappedBy = "appUser", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "appUser", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<AppUserYear> appUserYears;
 
     public AppUser(){}

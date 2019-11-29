@@ -23,11 +23,16 @@ app.config(['$routeProvider', '$locationProvider', '$stateProvider', '$urlRouter
         controller: 'ViewSemesterController',
         activetab: "semester"
     }).when('/session_expired', {
-        templateUrl: 'partials/session_expired.html'
-    });
+        templateUrl: 'partials/session_expired.html',
+        controller: 'HomeController'
+    }).when('/show_error/:error', {
+        templateUrl: 'partials/error.html',
+        controller: 'HomeController'
+    })
 
 
-    $routeProvider.otherwise({redirectTo:'/session_expired'});
+
+    $routeProvider.otherwise({redirectTo:'/show_error/404'});
 
 
     $locationProvider.html5Mode({

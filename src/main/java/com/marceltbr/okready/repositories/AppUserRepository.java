@@ -10,4 +10,6 @@ import java.util.LinkedList;
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     LinkedList<AppUser> findByUsername(String username);
     AppUser findById(long id);
+
+    boolean existsByUsername(String username);
 }

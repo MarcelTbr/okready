@@ -12,10 +12,10 @@ public class Year {
 
     private long year;
 
-    @OneToMany(mappedBy = "year", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "year", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<YearSemester> yearSemesters;
 
-    @OneToOne(mappedBy ="year", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy ="year", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private AppUserYear appUserYear;
 
     public Year(){}
