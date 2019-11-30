@@ -8,11 +8,16 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
         $scope.$route = $route;
         $rootScope.year = 0;
         $rootScope.semester_index = 0;
+        //check for closed sessions every 10 minutes
+        $scope.checkSesIntTime = 1000; //mseconds 10*60*
 
         function checkSession(){
 
-            $http.get("api/check_session").then(function(response){
+            console.log("errors/check_session");
 
+            $http.get("errors/check_session").then(function(response){
+
+                console.log("success");
                 console.log(response);
 
 
@@ -21,8 +26,31 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
 
             }, function(error){
                 console.log(error);
-                console.log("Error Status:");
+
+                var session = error.data.session;
+
+                if(session != undefined || session != null) {
+                    $rootScope.user = session;
+                }
+                console.log("Server Error Status:");
                 console.log(error.status);
+
+                console.log($location.url());
+
+                if(error.status === 404 && ($location.url() !== "/home" && $location.url() !== "/session_expired")){
+                    logout();
+                    $window.location.href = "/home";
+
+
+                } else if (error.status === 401 && ($location.url()!== "/session_expired" && $location.url() !== "/show_error/401") ){
+
+
+                    if( $location.url()!== "/home" && $location.url() !== "/"){
+
+                        $window.location.href = "/session_expired";
+                    }
+
+                }
             });
 
 
@@ -69,7 +97,7 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
 
                 $timeout(function(){
                 $window.location.href = "/home";
-                }, 5000)    ;
+                }, 30000)    ;
             }
         }
 
@@ -77,6 +105,9 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
         sessionExpired();
         handleErrors();
         checkSession();
+        $interval(function(){
+            checkSession();
+        }, $scope.checkSesIntTime);
 
         //load last viewed semester
         lastViewedSemester();
@@ -152,9 +183,6 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                 console.log("logged-out!");
                 $rootScope.user = false;
                 vm.password = "";
-
-                //localStorage.removeItem("year");
-                //localStorage.removeItem("semester-index");
             });
         };
 

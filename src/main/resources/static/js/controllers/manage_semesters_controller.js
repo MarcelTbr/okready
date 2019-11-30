@@ -9,6 +9,14 @@ app.controller('ManageSemestersController', ['$scope', '$http', '$location', '$i
                 console.log(response);
 
                 $scope.yearsDTO = response.data.yearsDTO;
+            }, function(error){
+
+                console.log(error);
+
+                // if (error.status == 404){
+                //     $location.replace("show_error/401");
+                // }
+
             });
 
 

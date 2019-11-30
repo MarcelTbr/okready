@@ -13,22 +13,28 @@ import org.springframework.boot.web.servlet.ErrorPage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.session.SessionInformationExpiredEvent;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -47,20 +53,46 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 		return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092");
 	}
 
-	@Override
-	public void addViewControllers(ViewControllerRegistry registry) {
+//	@Override
+//	public void addViewControllers(ViewControllerRegistry registry) {
+//
+//		/**
+//		 * Redirecting to homepage if the user refreshes the page
+//		 */
+//
+//		//registry.addRedirectViewController("/new_semester", "/");
+//		//registry.addRedirectViewController("/profile", "/");
+//
+//		//		registry.addViewController("/error").setViewName("error");
+//
+//		//registry.addViewController("/").setViewName("404");
+//	}
 
-		/**
-		 * Redirecting to homepage if the user refreshes the page
-		 */
+//	@Bean
+//	public EmbeddedServletContainerCustomizer containerCustomizer() {
+//
+//		return new EmbeddedServletContainerCustomizer() {
+//			@Override
+//			public void customize(ConfigurableEmbeddedServletContainer container) {
+//
+//				ErrorPage error401Page = new ErrorPage(HttpStatus.UNAUTHORIZED,
+//						"/401.html");
+//				ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND,
+//						"/404.html");
+//				ErrorPage error500Page = new ErrorPage(
+//						HttpStatus.INTERNAL_SERVER_ERROR, "/500.html");
+//				ErrorPage error505Page = new ErrorPage(
+//						HttpStatus.HTTP_VERSION_NOT_SUPPORTED, "/505.html");
+//				ErrorPage error506Page = new ErrorPage(
+//						HttpStatus.METHOD_NOT_ALLOWED, "/405.html");
+//				container.addErrorPages(error401Page, error404Page,
+//						error500Page, error505Page, error506Page);
+//			}
+//		};
+//	}
 
-		//registry.addRedirectViewController("/new_semester", "/");
-		//registry.addRedirectViewController("/profile", "/");
 
-//		registry.addViewController("/error").setViewName("error");
 
-		registry.addViewController("/").setViewName("404");
-	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(OkreadyApplication.class, args);
@@ -71,7 +103,21 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 		return new EmbeddedServletContainerCustomizer() {
 			@Override
 			public void customize(ConfigurableEmbeddedServletContainer container) {
-				container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/index.html"));
+				ErrorPage error401Page = new ErrorPage(HttpStatus.UNAUTHORIZED,
+						"/index.html");
+				ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND,
+						"/index.html");
+				ErrorPage error500Page = new ErrorPage(
+						HttpStatus.INTERNAL_SERVER_ERROR, "/index.html");
+				ErrorPage error505Page = new ErrorPage(
+						HttpStatus.HTTP_VERSION_NOT_SUPPORTED, "/index.html");
+				ErrorPage error506Page = new ErrorPage(
+						HttpStatus.METHOD_NOT_ALLOWED, "/index.html");
+
+
+
+				container.addErrorPages(error401Page, error404Page,
+						error500Page, error505Page, error506Page);
 			}
 		};
 	}
@@ -262,7 +308,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers("/", "/index.html", "/app/login", "/app/logout", "/js/**", "/img/**", "/css/**", "/img/**",
 						"/bower_components/**", "/fontawesome-free-5.8.1-web/**", "/home", "/partials/home.html", "/session_expired",
-						"/partials/session_expired.html", "/favicon.ico", "/trophy_favicon/**", "/partials/error.html", "/show_error/**").permitAll()
+						"/partials/session_expired.html", "/favicon.ico", "/trophy_favicon/**", "/partials/error.html", "/show_error/**", "/errors/**").permitAll()
 				.antMatchers("/**", "/api/**").hasAnyAuthority("USER")
 				.anyRequest().fullyAuthenticated();
 
@@ -277,13 +323,23 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.logout().logoutUrl("/app/logout");
 
-
-		http.exceptionHandling().accessDeniedPage("/home");
+		//http.exceptionHandling().accessDeniedPage("/errors/401"); //home
 
 		//redirect to page when session expired
 		http.sessionManagement()
-		.maximumSessions(1).expiredUrl("/session_expired");
-//				.and().invalidSessionUrl("/session_expired");
+		.maximumSessions(1).expiredUrl("/home");
+
+
+		//				.and().invalidSessionUrl("/session_expired");
+
+		//				.expiredSessionStrategy(new SessionInformationExpiredStrategy() {
+		//			@Override
+		//			public void onExpiredSessionDetected(SessionInformationExpiredEvent eventØ) throws IOException, ServletException {
+		//				eventØ.getResponse().sendRedirect("/session_expired");
+		//				return;
+		//			}
+		//		});
+
 
 		// turn off checking for CSRF tokens
 		http.csrf().disable();
@@ -295,8 +351,10 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		//	handle exceptions
 		http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> {
 
-			System.out.println( "Exception Message:" + exc.getMessage() );
+			System.out.println( ">>>Exception Message:" + exc.getMessage() );
+			exc.printStackTrace();
 
+//			res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 			res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			MyErrorController errorContr = new MyErrorController();
 			errorContr.myErrorHandler(req, res);

@@ -13,10 +13,17 @@ app.controller('ViewSemesterController', ['$scope', '$http', '$location', '$inte
             $scope.semester = response.data.semesterDTO;
 
         },function(error){
+
+            console.log(error);
+
             if(error.status === 409){
                 toaster.info("Last viewed semester could not be found. Please visit Manage Semesters to select which semester you want to view.");
             }
-            console.log(error);
+
+            // else if (error.status == 404){
+            //     $location.replace("show_error/401");
+            // }
+
         });
 
     // manage accordion

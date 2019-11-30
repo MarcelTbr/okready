@@ -55,21 +55,6 @@ public class AppController {
      * ======== ENDPOINTS ========
      */
 
-    @RequestMapping("check_session")
-    public ResponseEntity<Map<String,Object>> sessionCheck(Authentication auth){
-
-
-        if (auth != null) {
-
-            return new ResponseEntity<>(makeMap("session", true), HttpStatus.ACCEPTED);
-
-        } else {
-
-            return new ResponseEntity<>(makeMap("session", false), HttpStatus.FORBIDDEN);
-
-        }
-    }
-
     @RequestMapping("delete_semester/{id}")
     public ResponseEntity<Map<String,Object>> deleteSemester(Authentication auth, @PathVariable long id) {
 

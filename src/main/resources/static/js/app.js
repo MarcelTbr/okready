@@ -27,7 +27,7 @@ app.config(['$routeProvider', '$locationProvider', '$stateProvider', '$urlRouter
         controller: 'HomeController'
     }).when('/show_error/:error', {
         templateUrl: 'partials/error.html',
-        controller: 'HomeController'
+        controller: 'ErrorController'
     })
 
 
