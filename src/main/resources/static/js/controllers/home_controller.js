@@ -9,7 +9,7 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
         $rootScope.year = 0;
         $rootScope.semester_index = 0;
         //check for closed sessions every 10 minutes
-        $scope.checkSesIntTime = 1000; //mseconds 10*60*
+        $scope.checkSesIntTime = 10*60*1000; //mseconds
 
         function checkSession(){
 
