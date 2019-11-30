@@ -9,18 +9,22 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
         $rootScope.year = 0;
         $rootScope.semester_index = 0;
 
-        function checkSession() {
+        function checkSession(){
 
-            var openSes = localStorage.getItem("open-okr-session");
-           if(openSes === null || openSes !== "yes"){
+            $http.get("api/check_session").then(function(response){
 
-               var page =  $window.location.href;
-               if(page !== "/home"){
-                   page = "/home";
-               }
-           } else {
-               $rootScope.user = true;
-           }
+                console.log(response);
+
+
+                    $rootScope.user = response.data.session;
+
+
+            }, function(error){
+                console.log(error);
+                console.log("Error Status:");
+                console.log(error.status);
+            });
+
 
         }
 
@@ -73,8 +77,6 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
         sessionExpired();
         handleErrors();
         checkSession();
-        //TODO make a session check that goes to back end not the browser's local storage
-
 
         //load last viewed semester
         lastViewedSemester();
@@ -121,7 +123,7 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                     $rootScope.user = true;
                 }
                 vm.password = "";
-                localStorage.setItem("open-okr-session", "yes");
+
 
                 //redirect
                 $window.location.href = "/view_semester/"+$rootScope.year + "/" + $rootScope.semester_index;
@@ -151,7 +153,6 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
                 $rootScope.user = false;
                 vm.password = "";
 
-                localStorage.removeItem("open-okr-session");
                 //localStorage.removeItem("year");
                 //localStorage.removeItem("semester-index");
             });
