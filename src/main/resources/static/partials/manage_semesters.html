@@ -13,7 +13,7 @@
             </button>
 
     <div  ng-repeat="year in yearsDTO | orderBy: '-year'">
-         <button class="accordion" ng-click="accToggle($index)"><b>{{year.year}}</b></button>
+         <button class="accordion accordion-custom" ng-click="accToggle($index)"><b>{{year.year}}</b></button>
             <div class="panel">
               <ul class="kr_list">
                  <div ng-repeat="semester in year.semesters | orderBy: 'value'">

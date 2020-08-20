@@ -59,7 +59,7 @@
         <h5 ng-show="step1">{{form1.semester.name}} Semester of {{form1.year}}</h5>
         <button id="semester-save" class="btn window-button btn-success" ng-click="saveOKR()" ng-show="save">Save</button>
         <div class="okr-item" ng-repeat="okr in okr_array">
-            <button class="accordion" ng-click="accToggle($index)"><b>{{okr.total_wins}} <i class="smaller-font fas fa-trophy"></i> | {{okr.title}}</b></button>
+            <button class="accordion accordion-custom" ng-click="accToggle($index)"><b>{{okr.total_wins}} <i class="smaller-font fas fa-trophy"></i> | {{okr.title}}</b></button>
             <div class="panel">
               <ul class="kr_list">
                   <li ng-if="kr.title != undefined && kr.title != '' " ng-repeat="kr in okr.results" class="kr bg-primary text-white shadow rounded">

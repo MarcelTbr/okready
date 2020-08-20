@@ -29,3 +29,7 @@
 .DS_Store
 
 **/.DS_Store
+
+
+### Database ###
+/src/main/resources/application-remote.properties

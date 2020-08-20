@@ -1,0 +1,130 @@
+/* BASIC STYLES */
+h2 {
+    color: cyan;
+    text-shadow: 0px 1px 4px rgba(24, 33, 29, 1);;
+}
+
+#title {
+    display:flex;
+    justify-content: space-between;
+}
+
+#title h2 {
+    display: inline-block;
+}
+
+#title span {
+    font-size: 20px;
+    padding:5px;
+    height:40px;
+    color: white;
+    background-color: #007bff;
+    border-radius: 5px;
+    font-weight: 100;
+    position:relative;
+    top:15px;
+}
+
+#title i {
+    vertical-align: middle;
+}
+
+select.form-control {
+    display: inline-block;
+    width: 300px;
+}
+
+.add-content-textarea textarea.form-control {
+    height: 34px!important;
+}
+
+button#create-btn{
+    width: 40%;
+    margin: 15px auto ;
+    text-align:center;
+}
+
+button#create-btn span {
+    margin: auto;
+    text-transform: uppercase;
+}
+
+div#add-content-ui{
+    width: fit-content;
+    margin: 15px auto;
+}
+
+#new-card {
+    visibility: hidden;
+}
+
+input#category-name::placeholder, #add-content-block textarea::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #17a2b8;
+    opacity: .65; /* Firefox */
+    font-weight: 100;
+}
+
+input#category-name:-ms-input-placeholder, #add-content-block textarea:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #17a2b8;
+}
+
+input#category-name, #add-content-block textarea {
+    color: #343a40;
+    font-weight: 300;
+}
+
+div.card-body ul {
+    list-style-type: circle;
+    font-weight: 200;
+    opacity: .55;
+}
+
+span#credits {
+    font-weight: 100!important;
+    font-size: 13px;
+    text-align: center;
+    height:20px;
+    padding:0px 5px!important;
+
+}
+
+@keyframes fade {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+div#messages {
+    background-color: #20c997;
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+    width: 60%;
+    margin: 15px auto;
+    opacity: 0;
+    /* visibility: hidden; */
+    animation-name: fade;
+    animation-duration: 15s;
+}
+
+/* NEW STYLES */
+
+div#new-category-name, div#add-content-block {
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+div#new-category-name label, div#add-content-block label {
+
+    background-color: dodgerblue;
+    width: 150px;
+    color: white;
+    height: 34px;
+    padding: 7px 15px;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+div#add-content-block textarea{
+    display: inline-block;
+}

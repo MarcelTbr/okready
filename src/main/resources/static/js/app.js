@@ -28,6 +28,10 @@ app.config(['$routeProvider', '$locationProvider', '$stateProvider', '$urlRouter
     }).when('/show_error/:error', {
         templateUrl: 'partials/error.html',
         controller: 'ErrorController'
+    }).when('/motivator', {
+        templateUrl: 'partials/motivator.html',
+        controller: 'MotivatorController',
+        activetab: "motivator"
     })
 
 

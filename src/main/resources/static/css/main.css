@@ -404,7 +404,7 @@ a:-webkit-any-link {
 }
 
 /* Style the buttons that are used to open and close the accordion panel */
-.accordion {
+.accordion-custom {
     background-color: rgba(30,144, 255, 0.6); /*rgba(255,152, 0, 0.6);*/
     color: black;
     cursor: pointer;
@@ -417,9 +417,14 @@ a:-webkit-any-link {
 }
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active-acc, .accordion:hover {
+.active-acc, .accordion-custom:hover {
     background-color: dodgerblue;
     color: white;
+}
+
+@keyframes fade-in {
+    from {  opacity: .5; }
+    to {  opacity: 1; }
 }
 
 /* Style the accordion panel. Note: hidden by default */
@@ -431,9 +436,16 @@ a:-webkit-any-link {
     overflow: hidden;
     margin: 0px;
     border: 1px solid dodgerblue;
+    /*transition: all ease-in-out 2.5s;*/
+    animation-name: fade-in;
+    animation-durtation: .5s;
+    -webkit-animation: fade-in;
+    -webkit-animation-duration: .5s;
+    -moz-animation: fade-in .5s;
+
 }
 
-.accordion:after {
+.accordion-custom:after {
     content: '\02795'; /* Unicode character for "plus" sign (+) */
     font-size: 13px;
     color: #777;
@@ -445,7 +457,7 @@ a:-webkit-any-link {
     content: "\2796"; /* Unicode character for "minus" sign (-) */
 }
 
-.accordion:hover i {
+.accordion-custom:hover i {
     color:orange; /* change trophy-color to orange when hovering accoridion button */
     transition: 0.4s;
 }

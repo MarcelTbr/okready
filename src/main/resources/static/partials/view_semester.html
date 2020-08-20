@@ -36,7 +36,7 @@
         </button>
 
         <div ng-model="okr" class="okr-item" ng-repeat="okr in semester.okr_array | orderBy: 'id'" ng-init="$i_out = $index">
-            <button id="okr-{{$i_out}}" class="accordion" ng-click="accToggle($i_out)"><b>{{okr.total_wins}} <i class="smaller-font fas fa-trophy"></i> | {{okr.title}} </b>: <span ng-bind="calculateCompletion(okr)"></span></button>
+            <button id="okr-{{$i_out}}" class="accordion accordion-custom" ng-click="accToggle($i_out)"><b>{{okr.total_wins}} <i class="smaller-font fas fa-trophy"></i> | {{okr.title}} </b>: <span ng-bind="calculateCompletion(okr)"></span></button>
             <div class="panel">
                 <div class="completion">
 

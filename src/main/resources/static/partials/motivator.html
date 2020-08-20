@@ -1,0 +1,80 @@
+<main  style="background-image: url(https://cdn.pixabay.com/photo/2020/01/28/19/44/man-4800810_960_720.jpg);
+ background-position: center; background-size: cover;
+ height:1000px; width:100%;">
+    <section id="add-motivator-to-list" class="container">
+
+     <h2>New Motivator Category</h2>
+
+
+    <div class="container-custom">
+        <form id="motivator-form">
+
+           <div id="new-category-name" class="input-group mb-3">
+                     <label for="category-name">New Category: </label>
+                     <input id="category-name" name="category-name" type="text" class="form-control" placeholder="New Category Name" >
+
+           </div>
+
+           <button type="button" name="create-btn" id="create-btn" class="btn btn-primary input-group"><span>Create Category</span></button>
+
+            <div id="add-content-block" class="add-content-textarea">
+              <label for="add-content">Add Content</label>
+              <textarea class="form-control" name="add-content" placeholder="Add a motivational quote to a category from the list"></textarea>
+             <br>
+           </div><!-- end of #add-content-block -->
+
+          <div id="add-content-ui">
+              <button type="button" name="add-existing-btn" id="add-existing-btn" class="btn btn-danger">Add Content To Category</button>
+
+              <select id="categories" name="categories" class="form-control" disabled>
+                <option class="cat-option" value='0' selected="selected">Select One</option>
+                <option class="cat-option" value='1'>Comfort Zone</option>
+                <option class="cat-option" value='2'>Breaking It Down</option>
+                <option class="cat-option" value='3'>Complaining/Excuses</option>
+              </select>
+              <span class="form-group">
+                <button id="previous" type="button" name="button" class="btn btn-primary"><</button>
+                <button id="next" type="button" name="button" class="btn btn-primary">></button>
+              </span>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    </section>
+
+    </section>
+    <div id="messages"  >This is a message</div>
+    <section id="browse-motivator-list" class="container">
+
+      <span id="title">
+        <h2>Browse Motivators List</h2>
+        <span>Save <i class="far fa-save"></i></span>
+      </span>
+
+        <div ng-repeat="motivator in motivators_list">
+             <button class="accordion accordion-custom" ng-click="accToggle($index)"><b>{{motivator.category}}</b></button>
+             <div class="panel">
+               <ul class="kr_list">
+
+                   <li  class="kr bg-primary text-white shadow rounded">
+
+                  Plan your steps in a very specific way, so that you can move faster into achieving your goals
+                        <!--<i ng-if="semester.id != 2 && editSemesters" class="far fa-trash-alt" ng-click="deleteSemester(semester.id, year.year, semester.name)"></i>-->
+                   </li>
+                   <li class="kr bg-primary text-white shadow" rounded>Better to take small steps in the right direction than to make a great leap forward only to stumble backwards</li>
+
+               </ul>
+             </div>
+        </div>
+          <br>
+          <span id="credits" class="d-block p-2 bg-primary text-white">Some of the content is out of Edwin Diaz's course on Motivation in Udemy</span>
+
+        </section>
+
+
+
+    </section>
+</main>
