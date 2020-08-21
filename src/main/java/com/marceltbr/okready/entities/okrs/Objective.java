@@ -1,10 +1,6 @@
-package com.marceltbr.okready.entities;
-
-import org.hibernate.validator.constraints.Length;
+package com.marceltbr.okready.entities.okrs;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Set;
 
 @Entity

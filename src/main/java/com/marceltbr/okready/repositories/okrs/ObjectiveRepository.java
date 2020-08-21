@@ -1,10 +1,8 @@
-package com.marceltbr.okready.repositories;
+package com.marceltbr.okready.repositories.okrs;
 
-import com.marceltbr.okready.entities.Objective;
+import com.marceltbr.okready.entities.okrs.Objective;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-
-import java.util.List;
 
 @RepositoryRestResource
 public interface ObjectiveRepository extends JpaRepository<Objective, Long> {

@@ -1,7 +1,7 @@
-package com.marceltbr.okready.repositories;
+package com.marceltbr.okready.repositories.okrs;
 
 import com.marceltbr.okready.entities.AppUser;
-import com.marceltbr.okready.entities.AppUserYear;
+import com.marceltbr.okready.entities.okrs.AppUserYear;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 

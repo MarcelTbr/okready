@@ -1,4 +1,6 @@
-package com.marceltbr.okready.entities;
+package com.marceltbr.okready.entities.okrs;
+
+import com.marceltbr.okready.entities.AppUser;
 
 import javax.persistence.*;
 

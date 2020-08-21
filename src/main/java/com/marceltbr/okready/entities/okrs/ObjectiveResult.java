@@ -1,7 +1,6 @@
-package com.marceltbr.okready.entities;
+package com.marceltbr.okready.entities.okrs;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 public class ObjectiveResult {

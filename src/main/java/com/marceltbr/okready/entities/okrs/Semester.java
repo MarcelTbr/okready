@@ -1,6 +1,4 @@
-package com.marceltbr.okready.entities;
-
-import org.springframework.data.repository.cdi.Eager;
+package com.marceltbr.okready.entities.okrs;
 
 import javax.persistence.*;
 import java.util.Set;

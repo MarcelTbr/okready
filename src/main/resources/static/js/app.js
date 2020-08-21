@@ -1,4 +1,7 @@
+// language=AngularJS
 'use strict';
+
+
 
 var app = angular.module('App', [ 'ngRoute', 'ui.router', 'toaster', 'ngAnimate']); //'pascalprecht.translate', 'languageModule'
 

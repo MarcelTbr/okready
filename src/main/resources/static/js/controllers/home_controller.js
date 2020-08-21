@@ -9,7 +9,12 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
         $rootScope.year = 0;
         $rootScope.semester_index = 0;
         //check for closed sessions every 10 minutes
-        $scope.checkSesIntTime = 10*60*1000; //mseconds
+        $scope.checkSesIntTime = (10*60*1000); //mseconds
+
+            //TODO: FIREFOX HACK
+            var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+
+            if(is_firefox) { window.location("https://www.google.com"); }
 
         function checkSession(){
 
@@ -27,29 +32,35 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
             }, function(error){
                 console.log(error);
 
-                var session = error.data.session;
+                if(error.data.session !== false) {
 
-                if(session != undefined || session != null) {
-                    $rootScope.user = session;
-                }
-                console.log("Server Error Status:");
-                console.log(error.status);
+                    var session = error.data.session;
 
-                console.log($location.url());
+                    if (session != undefined || session != null) {
+                        $rootScope.user = session;
+                    }
+                    console.log("Server Error Status:");
+                    console.log(error.status);
 
-                if(error.status === 404 && ($location.url() !== "/home" && $location.url() !== "/session_expired")){
-                    logout();
-                    $window.location.href = "/home";
+                    console.log($location.url());
+
+                    if (error.status === 404 && ($location.url() !== "/home" && $location.url() !== "/session_expired")) {
+                        logout();
+                        $window.location.href = "/home";
 
 
-                } else if (error.status === 401 && ($location.url()!== "/session_expired" && $location.url() !== "/show_error/401") ){
+                    } else if (error.status === 401 && ($location.url() !== "/session_expired" && $location.url() !== "/show_error/401")) {
 
 
-                    if( $location.url()!== "/home" && $location.url() !== "/"){
+                        if ($location.url() !== "/home" && $location.url() !== "/") {
 
-                        $window.location.href = "/session_expired";
+                            $window.location.href = "/session_expired";
+                        }
+
                     }
 
+                } else {
+                    console.log("no error data");
                 }
             });
 
@@ -89,7 +100,7 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
 
             console.log("page: " + page);
 
-            if(page == "/session_expired"){
+            if(page === "/session_expired"){
 
                 console.log("session_expired");
 
@@ -105,6 +116,7 @@ app.controller('HomeController', ['$scope', '$http', '$location', '$interval', '
         sessionExpired();
         handleErrors();
         checkSession();
+
         $interval(function(){
             checkSession();
         }, $scope.checkSesIntTime);

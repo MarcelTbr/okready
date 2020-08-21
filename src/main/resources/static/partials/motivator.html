@@ -28,9 +28,7 @@
 
               <select id="categories" name="categories" class="form-control" disabled>
                 <option class="cat-option" value='0' selected="selected">Select One</option>
-                <option class="cat-option" value='1'>Comfort Zone</option>
-                <option class="cat-option" value='2'>Breaking It Down</option>
-                <option class="cat-option" value='3'>Complaining/Excuses</option>
+                <option class="cat-option" value='{{($index + 1) }}' ng-repeat="motivator in motivators_list">{{motivator.category}}</option>
               </select>
               <span class="form-group">
                 <button id="previous" type="button" name="button" class="btn btn-primary"><</button>
