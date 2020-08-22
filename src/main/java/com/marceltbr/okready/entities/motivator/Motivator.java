@@ -18,16 +18,20 @@ public class Motivator {
 
     @OneToMany( fetch = FetchType.EAGER)
     @JoinColumn(name="category_id")
-    private Set<Category> categorieSet;
+    private Set<Category> categorySet;
 
     public Motivator () {}
 
-    public Motivator(AppUserMotivator appUserMotivator, Set<Category> categorieSet) {
-        this.appUserMotivator = appUserMotivator;
-        this.categorieSet = categorieSet;
-    }
 
     public long getId() {
         return id;
+    }
+
+    public AppUserMotivator getAppUserMotivator() {
+        return appUserMotivator;
+    }
+
+    public Set<Category> getCategorySet() {
+        return categorySet;
     }
 }

@@ -1,8 +1,10 @@
 package com.marceltbr.okready;
 
 import com.marceltbr.okready.entities.*;
+import com.marceltbr.okready.entities.motivator.*;
 import com.marceltbr.okready.entities.okrs.*;
 import com.marceltbr.okready.repositories.*;
+import com.marceltbr.okready.repositories.motivator.*;
 import com.marceltbr.okready.repositories.okrs.*;
 import org.h2.tools.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
+
+import static com.marceltbr.okready.HelperFunctions.*;
 
 
 @SpringBootApplication
@@ -118,12 +123,17 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 	}
 
 
+
+
 	@Bean
 	public CommandLineRunner initData(AppUserRepository appUserRepository, YearRepository yearRepository,
 									  YearSemesterRepository yearSemesterRepository, SemesterRepository semesterRepository,
 									  ObjectiveRepository objectiveRepo, SemesterObjectiveRepository semesterObjectiveRepo,
 									  ResultRepository resultRepo, ObjectiveResultRepository objectiveResultRepo,
-									  AppUserYearRepository appUserYearRepo) {
+									  AppUserYearRepository appUserYearRepo, QuoteRepository quoteRepository,
+									  CategoryQuoteRepository categoryQuoteRepository,
+									  CategoryRepository categoryRepository, MotivatorRepository motivatorRepository,
+									  AppUserMotivatorRepository appUserMotivatorRepository) {
 
 		return (args) -> {
 
@@ -169,6 +179,12 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 
 				objectiveResultRepo.save(objRes1);
 				objectiveResultRepo.save(objRes2);
+
+
+				Motivator adminMotivator = makeMotivator(motivatorRepository);
+				makeAppUserMotivator(adminMotivator, admin, appUserMotivatorRepository);
+
+
 			}
 
 			/** Guest User DATA **/
@@ -245,6 +261,48 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 				objectiveResultRepo.save(objRes21);
 				objectiveResultRepo.save(objRes22);
 				objectiveResultRepo.save(objRes23);
+
+
+				/**
+				 *
+				 * Create guest user default motivator content
+				 *
+				 */
+
+				String category_name1 = "Comfort Zone";
+				String category_name2 = "Breaking It Down";
+				String category_name3 = "Complaining/Excuses";
+				makeCategory(category_name1, categoryRepository); makeCategory(category_name2, categoryRepository);
+				makeCategory(category_name3, categoryRepository);
+
+				Category category1 = makeCategory(category_name1, categoryRepository);
+				String content1_1 = "To break out of your confort zone use your imagination to feel the painful consequences of not doing something you need to do";
+				String content1_2 = "Sometimes our mind will serve us, but sometimes it will work against us";
+				Quote quote1_1 = makeQuote(content1_1, quoteRepository); Quote quote1_2 = makeQuote(content1_2, quoteRepository);
+				makeCategoryQuote(category1, quote1_1, categoryQuoteRepository);
+				makeCategoryQuote(category1, quote1_2, categoryQuoteRepository);
+
+
+				Category category2 = makeCategory(category_name2, categoryRepository);
+				String content2_1 = "Plan your steps in a very specific way, so that you can move faster into achieving your goals";
+				String content2_2 = "Better to take small steps in the right direction than to make a great leap forward only to stumble backwards";
+				Quote quote2_1 = makeQuote(content2_1, quoteRepository); Quote quote2_2 = makeQuote(content2_2, quoteRepository);
+				makeCategoryQuote(category2, quote2_1, categoryQuoteRepository);
+				makeCategoryQuote(category2, quote2_2, categoryQuoteRepository);
+
+				Category category3 = makeCategory(category_name3, categoryRepository);
+				String content3_1 = "Invest your complaining into better things, like fixing the problem";
+				String content3_2 = "Complaining does not achieve anything other than stop your progress";
+				String content3_3 = "Stop complaining and start doing";
+				Quote quote3_1 = makeQuote(content3_1, quoteRepository); Quote quote3_2 = makeQuote(content3_2, quoteRepository);
+				Quote quote3_3 = makeQuote(content3_3, quoteRepository);
+				makeCategoryQuote(category3, quote3_1, categoryQuoteRepository);
+				makeCategoryQuote(category3, quote3_2, categoryQuoteRepository);
+				makeCategoryQuote(category3, quote3_3, categoryQuoteRepository);
+
+
+				Motivator guestMotivator = makeMotivator(motivatorRepository);
+				makeAppUserMotivator(guestMotivator, guest, appUserMotivatorRepository);
 
 			}
 

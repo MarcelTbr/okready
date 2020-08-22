@@ -17,9 +17,8 @@ public class Quote {
     public Quote() {
     }
 
-    public Quote(String content, CategoryQuote categoryQuote) {
+    public Quote(String content) {
         this.content = content;
-        this.categoryQuote = categoryQuote;
     }
 
     public long getId() {
