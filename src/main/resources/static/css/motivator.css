@@ -29,6 +29,10 @@ h2 {
     vertical-align: middle;
 }
 
+#save-all {
+     cursor: pointer;
+}
+
 select.form-control {
     display: inline-block;
     width: 300px;

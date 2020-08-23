@@ -7,19 +7,19 @@
 
 
     <div class="container-custom">
-        <form id="motivator-form">
+        <form id="motivatorForm">
 
            <div id="new-category-name" class="input-group mb-3">
-                     <label for="category-name">New Category: </label>
-                     <input id="category-name" name="category-name" type="text" class="form-control" placeholder="New Category Name" >
+                     <label for="categoryName">New Category: </label>
+                     <input ng-model="motivatorForm.categoryName" id="category-name" name="categoryName" type="text" class="form-control" placeholder="New Category Name" >
 
            </div>
 
-           <button type="button" name="create-btn" id="create-btn" class="btn btn-primary input-group"><span>Create Category</span></button>
+           <button ng-click="addCategory()" type="button" name="create-btn" id="create-btn" class="btn btn-primary input-group"><span>Create Category</span></button>
 
             <div id="add-content-block" class="add-content-textarea">
-              <label for="add-content">Add Content</label>
-              <textarea class="form-control" name="add-content" placeholder="Add a motivational quote to a category from the list"></textarea>
+              <label for="addContent">Add Content</label>
+              <textarea ng-model="motivatorForm.addContent" class="form-control" name="addContent" placeholder="Add a motivational quote to a category from the list"></textarea>
              <br>
            </div><!-- end of #add-content-block -->
 
@@ -49,7 +49,7 @@
 
       <span id="title">
         <h2>Browse Motivators List</h2>
-        <span>Save <i class="far fa-save"></i></span>
+        <span ng-click="saveAll()" id="save-all">Save <i class="far fa-save"></i></span>
       </span>
 
         <div ng-repeat="motivator in motivators_list">
@@ -57,12 +57,9 @@
              <div class="panel">
                <ul class="kr_list">
 
-                   <li  class="kr bg-primary text-white shadow rounded">
-
-                  Plan your steps in a very specific way, so that you can move faster into achieving your goals
-                        <!--<i ng-if="semester.id != 2 && editSemesters" class="far fa-trash-alt" ng-click="deleteSemester(semester.id, year.year, semester.name)"></i>-->
+                   <li  class="kr bg-primary text-white shadow rounded" ng-repeat="quote in motivator.items">
+                    {{quote}}
                    </li>
-                   <li class="kr bg-primary text-white shadow" rounded>Better to take small steps in the right direction than to make a great leap forward only to stumble backwards</li>
 
                </ul>
              </div>

@@ -30,9 +30,9 @@ public class HelperFunctions {
         return motivator;
     }
 
-    public static Category makeCategory (@NotNull String categoryName, CategoryRepository categoryRepository) {
+    public static Category makeCategory (@NotNull String categoryName, @NotNull Motivator motivator, CategoryRepository categoryRepository) {
 
-        Category category = new Category(categoryName);
+        Category category = new Category(motivator, categoryName);
         categoryRepository.save(category);
 
         return category;

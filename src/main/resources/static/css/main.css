@@ -185,6 +185,11 @@ nav.navbar.navbar-primary {
     justify-content: space-between;
 }
 
+.kr, .kr span {
+    font-weight: 200;
+}
+
+
 .kr_list {
     list-style: none;
     padding-left: 0;
@@ -662,6 +667,9 @@ h3.white{
     margin: 0;
 }
 
+button#logout, button#login {
+    font-weight: 200;
+}
 
 button#logout:hover i, button#login:hover i {
     color:dodgerblue!important;

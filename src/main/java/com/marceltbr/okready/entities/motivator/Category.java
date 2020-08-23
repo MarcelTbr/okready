@@ -19,7 +19,12 @@ public class Category {
     }
 
 
-    public Category( String name) {
+//    public Category( String name) {
+//        this.name = name;
+//    }
+
+    public Category(Motivator motivator, String name) {
+        this.motivator = motivator;
         this.name = name;
     }
 

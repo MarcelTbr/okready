@@ -269,13 +269,13 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 				 *
 				 */
 
+				Motivator guestMotivator = makeMotivator(motivatorRepository);
+
 				String category_name1 = "Comfort Zone";
 				String category_name2 = "Breaking It Down";
 				String category_name3 = "Complaining/Excuses";
-				makeCategory(category_name1, categoryRepository); makeCategory(category_name2, categoryRepository);
-				makeCategory(category_name3, categoryRepository);
 
-				Category category1 = makeCategory(category_name1, categoryRepository);
+				Category category1 = makeCategory(category_name1, guestMotivator, categoryRepository);
 				String content1_1 = "To break out of your confort zone use your imagination to feel the painful consequences of not doing something you need to do";
 				String content1_2 = "Sometimes our mind will serve us, but sometimes it will work against us";
 				Quote quote1_1 = makeQuote(content1_1, quoteRepository); Quote quote1_2 = makeQuote(content1_2, quoteRepository);
@@ -283,14 +283,14 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 				makeCategoryQuote(category1, quote1_2, categoryQuoteRepository);
 
 
-				Category category2 = makeCategory(category_name2, categoryRepository);
+				Category category2 = makeCategory(category_name2, guestMotivator, categoryRepository);
 				String content2_1 = "Plan your steps in a very specific way, so that you can move faster into achieving your goals";
 				String content2_2 = "Better to take small steps in the right direction than to make a great leap forward only to stumble backwards";
 				Quote quote2_1 = makeQuote(content2_1, quoteRepository); Quote quote2_2 = makeQuote(content2_2, quoteRepository);
 				makeCategoryQuote(category2, quote2_1, categoryQuoteRepository);
 				makeCategoryQuote(category2, quote2_2, categoryQuoteRepository);
 
-				Category category3 = makeCategory(category_name3, categoryRepository);
+				Category category3 = makeCategory(category_name3, guestMotivator, categoryRepository);
 				String content3_1 = "Invest your complaining into better things, like fixing the problem";
 				String content3_2 = "Complaining does not achieve anything other than stop your progress";
 				String content3_3 = "Stop complaining and start doing";
@@ -301,7 +301,7 @@ public class OkreadyApplication extends WebMvcConfigurerAdapter{
 				makeCategoryQuote(category3, quote3_3, categoryQuoteRepository);
 
 
-				Motivator guestMotivator = makeMotivator(motivatorRepository);
+
 				makeAppUserMotivator(guestMotivator, guest, appUserMotivatorRepository);
 
 			}

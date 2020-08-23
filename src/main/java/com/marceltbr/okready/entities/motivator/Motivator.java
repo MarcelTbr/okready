@@ -17,7 +17,7 @@ public class Motivator {
 
 
     @OneToMany( fetch = FetchType.EAGER)
-    @JoinColumn(name="category_id")
+    @JoinColumn(name="motivator_id")
     private Set<Category> categorySet;
 
     public Motivator () {}

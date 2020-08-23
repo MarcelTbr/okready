@@ -1,5 +1,6 @@
 package com.marceltbr.okready.entities;
 
+import com.marceltbr.okready.entities.motivator.AppUserMotivator;
 import com.marceltbr.okready.entities.okrs.AppUserYear;
 
 import javax.persistence.*;
@@ -21,11 +22,20 @@ public class AppUser {
     @OneToMany(mappedBy = "appUser", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<AppUserYear> appUserYears;
 
+    @OneToMany(mappedBy = "appUser", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+//    @JoinColumn(name = "appUserMotivator_id")
+    Set<AppUserMotivator> appUserMotivatorSet;
+
     public AppUser(){}
 
     public AppUser(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+
+    public long getId() {
+        return id;
     }
 
     public String getUsername() {
@@ -38,5 +48,9 @@ public class AppUser {
 
     public Set<AppUserYear> getAppUserYears() {
         return appUserYears;
+    }
+
+    public Set<AppUserMotivator> getAppUserMotivatorSet() {
+        return appUserMotivatorSet;
     }
 }
