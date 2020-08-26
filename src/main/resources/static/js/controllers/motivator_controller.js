@@ -22,7 +22,7 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
                         ]
                 },
                 {
-                    category: "Complaining Excuses",
+                    category: "Complaining/Excuses",
                     items:
                         [
                             "Invest your complaining into better things, like fixing the problem" ,
@@ -32,7 +32,20 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
                 }
             ];
 
+        function makeMotivatorsJSON() {
 
+            var data = $scope.motivators_list.map( function(motivator) { return JSON.stringify(motivator); });
+
+
+               var motivatorsJSON = { "data": data}   ;
+
+
+               console.log(motivatorsJSON);
+
+
+            return motivatorsJSON;
+
+        }
 
 
         function motivatorFormControl() {
@@ -59,7 +72,8 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
 
             $scope.saveAll = function (){
 
-                saveCategory();
+                //saveCategory();
+                saveMotivatorsList();
             }
 
             function saveCategory(){
@@ -90,6 +104,30 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
                 });
             }
 
+            function saveMotivatorsList(){
+
+               var motivatorsJSON = makeMotivatorsJSON();
+
+                $http({
+                    url: "api/save_motivators_list",
+                    method: 'POST',
+                    data: motivatorsJSON,
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then(function (response) {
+
+                    console.info("api/save_motivators_list", response.data);
+
+                    toaster.success("List successfully saved!");
+                }, function (error) {
+
+                    console.info("api/save_motivators_list", error.data);
+                    toaster.error("Sorry could not save list.");
+
+                    $route.reload();
+                });
+            }
 
         }
 
@@ -116,7 +154,7 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
 
             function selectPrevious() {
                 var categories_list = document.querySelector("select#categories");
-                console.log(categories_list)
+                console.log(categories_list) ;
                 var selected_category_value = categories_list.options[categories_list.selectedIndex].value;
 
                 //console.info("selected_category_value", selected_category_value);
