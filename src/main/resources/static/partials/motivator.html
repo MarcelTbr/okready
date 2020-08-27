@@ -19,12 +19,12 @@
 
             <div id="add-content-block" class="add-content-textarea">
               <label for="addContent">Add Content</label>
-              <textarea ng-model="motivatorForm.addContent" class="form-control" name="addContent" placeholder="Add a motivational quote to a category from the list"></textarea>
+              <textarea ng-model="motivatorForm.content" class="form-control" name="addContent" placeholder="Add a motivational quote to a category from the list"></textarea>
              <br>
            </div><!-- end of #add-content-block -->
 
           <div id="add-content-ui">
-              <button type="button" name="add-existing-btn" id="add-existing-btn" class="btn btn-danger">Add Content To Category</button>
+              <button ng-click="addContentToCategory()" type="button" name="add-existing-btn" id="add-existing-btn" class="btn btn-danger">Add Content To Category</button>
 
               <select id="categories" name="categories" class="form-control" disabled>
                 <option class="cat-option" value='0' selected="selected">Select One</option>

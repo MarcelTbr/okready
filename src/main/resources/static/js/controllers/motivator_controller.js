@@ -74,7 +74,7 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
 
                 //saveCategory();
                 saveMotivatorsList();
-            }
+            };
 
             function saveCategory(){
 
@@ -134,18 +134,63 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
 
         function addContentToCategoryControl() {
 
+            $scope.selectedCategoryIndex = null;
+            $scope.selectedCategoryName = null;
+
+
+            /**
+             * @addContentToCategory = button control
+             *
+             */
+
+            $scope.addContentToCategory = function () {
+
+                addItemToCategory();
+            };
+
+
+            function addItemToCategory() {
+
+                if($scope.selectedCategoryName !== null && $scope.selectedCategoryIndex !== null){
+
+                    var category_items_list = $scope.motivators_list[$scope.selectedCategoryIndex].items
+                        category_items_list.push($scope.motivatorForm.content);
+
+                    toaster.info("Content added to " + $scope.selectedCategoryName);
+
+                    console.log(category_items_list);
+
+                } else {
+                    toaster.error("Please select the category where you want add your content.");
+                };
+            }
+
+
+            /**
+             *
+             * @next = select next category
+             * @previous = select previous category
+             *
+             * @selectedCategoryName = the string name of the selected category
+             * @selectedCategoryIndex = the index of the category in $scope.motivators_list
+             *
+             */
+
+
             var next = document.getElementById("next");
             next.addEventListener("click", selectNext);
 
             function selectNext() {
                 var categories_list = document.querySelector("select#categories");
                 var selected_category_value = categories_list.options[categories_list.selectedIndex].value;
-                //console.info("selected_category_value", selected_category_value);
 
                 if (selected_category_value < (categories_list.length - 1)) {
                     categories_list.value = (++selected_category_value);
+
+                    let selected_category_text = categories_list.options[categories_list.selectedIndex].innerText;
+                    $scope.selectedCategoryName = selected_category_text;
+                    $scope.selectedCategoryIndex =  (categories_list.value - 1);
                 }
-                //console.log(categories_list.value)
 
             }
 
@@ -157,12 +202,13 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
                 console.log(categories_list) ;
                 var selected_category_value = categories_list.options[categories_list.selectedIndex].value;
 
-                //console.info("selected_category_value", selected_category_value);
-
                 if (selected_category_value > 1) {
                     categories_list.value = (--selected_category_value);
+
+                    let selected_category_text = categories_list.options[categories_list.selectedIndex].innerText;
+                    $scope.selectedCategoryName = selected_category_text;
+                    $scope.selectedCategoryIndex = (categories_list.value + 1);
                 }
-                //console.log(categories_list.value)
 
             }
 
