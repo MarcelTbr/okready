@@ -1,4 +1,4 @@
-<main >
+<main style="background-image: url(https://cdn.pixabay.com/photo/2020/01/28/19/44/man-4800810_960_720.jpg);">
     <section id="add-motivator-to-list" class="container">
 
      <h2>New Motivator Category</h2>
@@ -51,7 +51,7 @@
       </span>
 
         <div ng-repeat="motivator in motivators_list | orderBy: 'id' ">
-             <button class="accordion accordion-custom" ng-click="accToggle($index)"><b>{{motivator.category}}</b><span ng-if="motivator.items.length == 0" class="orange"> (empty)  </span></button>
+             <button class="accordion accordion-custom" ng-click="accToggle($index)"><b>{{motivator.category}}</b><span ng-if="motivator.items.length == 0" class="orange"> (empty)  </span><span ng-if="motivator.id == 0" class="orange"> (unsaved)  </span></button>
              <div class="panel">
                <ul class="kr_list">
 
@@ -66,8 +66,5 @@
           <span id="credits" class="d-block p-2 bg-primary text-white">Some of the content is out of Edwin Diaz's course on Motivation in Udemy</span>
 
         </section>
-
-
-
     </section>
 </main>
