@@ -32,4 +32,4 @@
 
 
 ### Database ###
-/src/main/resources/application-remote.properties
+/src/main/resources/application-remote-backup.properties

@@ -4,8 +4,9 @@ package com.marceltbr.okready;
 import com.marceltbr.okready.entities.AppUser;
 import com.marceltbr.okready.entities.motivator.Motivator;
 import com.marceltbr.okready.repositories.AppUserRepository;
+import com.marceltbr.okready.repositories.motivator.CategoryQuoteRepository;
 import com.marceltbr.okready.repositories.motivator.CategoryRepository;
-import com.marceltbr.okready.repositories.motivator.MotivatorRepository;
+import com.marceltbr.okready.repositories.motivator.QuoteRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 
 @RequestMapping("/api")
 @RestController
@@ -25,12 +25,14 @@ public class MotivatorController extends HelperFunctions {
     @Autowired
     private AppUserRepository appUserRepo;
 
-
     @Autowired
     private CategoryRepository categoryRepo;
 
     @Autowired
-    private MotivatorRepository motivatorRepo;
+    private CategoryQuoteRepository categoryQuoteRepo;
+
+    @Autowired
+    private QuoteRepository quoteRepo;
 
 
     /**
@@ -82,14 +84,21 @@ public class MotivatorController extends HelperFunctions {
 
             JSONArray motivators_list = json.getJSONArray("data");
 
-            Iterator motivatorsIterator = motivators_list.iterator();
+            Iterator categoriesIterator = motivators_list.iterator();
 
-            while(motivatorsIterator.hasNext()){
+            while(categoriesIterator.hasNext()){
 
-                saveMotivatorListFromObject(motivatorsIterator.next(), usersMotivator);
+                saveCategoryFromMotivatorListObject(categoriesIterator.next(), usersMotivator, categoryRepo);
             }
 
+            //loop again and this time check if there are quotes to save
+            Iterator secondCategoriesIterator = motivators_list.iterator();
+            while(secondCategoriesIterator.hasNext()){
 
+                saveCategoryQuotesFromMotivatorListObject(secondCategoriesIterator.next(), categoryRepo, quoteRepo, categoryQuoteRepo);
+            }
+
+            //TODO: return motivatorsListDTO
 
             return new ResponseEntity<>(HelperFunctions.makeMap("success", "List Saved"), HttpStatus.ACCEPTED);
 
@@ -100,31 +109,5 @@ public class MotivatorController extends HelperFunctions {
         }
     }
 
-    private Motivator saveMotivatorListFromObject(Object nextObject, Motivator motivator) {
 
-
-        String motivatorStr = nextObject.toString();
-
-        System.out.println(motivatorStr);
-
-        JSONObject motivatorObj = new JSONObject(  motivatorStr );
-
-        String categoryName = motivatorObj.getString("category");
-
-        boolean categoryExists = motivator.getCategorySet().stream().filter(category -> Objects.equals(category.getName(), categoryName ) ).count() > 0;
-
-        if(!categoryExists){
-
-            makeCategory(categoryName, motivator, categoryRepo);
-
-            System.out.println(categoryName + " created!\n");
-        } else {
-            System.out.println(categoryName + " already exists!\n");
-        }
-
-
-
-
-        return motivator;
-    }
 }

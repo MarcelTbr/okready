@@ -38,4 +38,13 @@ public class CategoryQuote {
     public Category getCategory() {
         return category;
     }
+
+    @Override
+    public String toString() {
+        return "CategoryQuote{" +
+                "id=" + id +
+                ", quote_id=" + quote.getId() +
+                ", category_id=" + category.getId() +
+                '}';
+    }
 }

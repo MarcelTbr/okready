@@ -6,28 +6,32 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
         $scope.motivators_list =
             [
                 {
+                    id: 4,
                     category: "Comfort Zone",
                     items:
                         [
-                            "To break out of your confort zone use your imagination to feel the painful consequences of not doing something you need to do" ,
-                            "Sometimes our mind will serve us, but sometimes it will work against us"
+                            { id: 8, content: "To break out of your confort zone use your imagination to feel the " +
+                                "painful consequences of not doing something you need to do" },
+                            { id: 9, content: "Sometimes our mind will serve us, but sometimes it will work against us" }
                         ]
                 },
                 {
+                    id: 5,
                     category: "Breaking It Down",
                     items:
                         [
-                            "Plan your steps in a very specific way, so that you can move faster into achieving your goals" ,
-                            "Better to take small steps in the right direction than to make a great leap forward only to stumble backwards"
+                            {id: 10, content: "Plan your steps in a very specific way, so that you can move faster into achieving your goals" },
+                            {id: 11, content: "Better to take small steps in the right direction than to make a great leap forward only to stumble backwards" }
                         ]
                 },
                 {
+                    id: 6,
                     category: "Complaining/Excuses",
                     items:
                         [
-                            "Invest your complaining into better things, like fixing the problem" ,
-                            "Complaining does not achieve anything other than stop your progress",
-                            "Stop complaining and start doing"
+                            {id: 12, content: "Invest your complaining into better things, like fixing the problem" },
+                            {id: 13, content: "Complaining does not achieve anything other than stop your progress"},
+                            {id: 14, content: "Stop complaining and start doing" }
                         ]
                 }
             ];
@@ -55,6 +59,7 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
             $scope.addCategory = function (){
 
                 var new_category_obj = {
+                    "id": 0,
                     "category" : $scope.motivatorForm.categoryName,
                     "items": []
                 };
@@ -67,7 +72,7 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
 
                 $scope.motivatorForm.categoryName = "";
 
-                toaster.info("Remember to save your content once you are done");
+                toaster.warning("Remember to save your content once you are done");
             };
 
             $scope.saveAll = function (){
@@ -153,16 +158,24 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
 
                 if($scope.selectedCategoryName !== null && $scope.selectedCategoryIndex !== null){
 
-                    var category_items_list = $scope.motivators_list[$scope.selectedCategoryIndex].items
-                        category_items_list.push($scope.motivatorForm.content);
+                    var category_items_list = $scope.motivators_list[$scope.selectedCategoryIndex].items;
+                    var new_item = {
+                            id: 0,
+                            content: $scope.motivatorForm.content
+                        };
+                        category_items_list.push(new_item);
 
                     toaster.info("Content added to " + $scope.selectedCategoryName);
+
+                    toaster.warning("Remember to save your content once you are done");
+
+                    $scope.motivatorForm.content = "";
 
                     console.log(category_items_list);
 
                 } else {
                     toaster.error("Please select the category where you want add your content.");
-                };
+                }
             }
 
 

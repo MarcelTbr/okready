@@ -1,6 +1,7 @@
 package com.marceltbr.okready.entities.motivator;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Category {
@@ -16,12 +17,8 @@ public class Category {
     private String name;
 
     public Category() {
+
     }
-
-
-//    public Category( String name) {
-//        this.name = name;
-//    }
 
     public Category(Motivator motivator, String name) {
         this.motivator = motivator;

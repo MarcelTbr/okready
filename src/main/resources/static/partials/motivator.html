@@ -28,7 +28,7 @@
 
               <select id="categories" name="categories" class="form-control" disabled>
                 <option class="cat-option" value='0' selected="selected">Select One</option>
-                <option class="cat-option" value='{{($index + 1) }}' ng-repeat="motivator in motivators_list">{{motivator.category}}</option>
+                <option data-id="{{motivator.id}}" class="cat-option" value='{{($index + 1) }}' ng-repeat="motivator in motivators_list">{{motivator.category}}</option>
               </select>
               <span class="form-group">
                 <button id="previous" type="button" name="button" class="btn btn-primary"><</button>
@@ -57,8 +57,8 @@
              <div class="panel">
                <ul class="kr_list">
 
-                   <li  class="kr bg-primary text-white shadow rounded" ng-repeat="quote in motivator.items">
-                    {{quote}}
+                   <li data-id="{{quote.id}}" class="kr bg-primary text-white shadow rounded" ng-repeat="quote in motivator.items">
+                    {{quote.content}}
                    </li>
 
                </ul>
