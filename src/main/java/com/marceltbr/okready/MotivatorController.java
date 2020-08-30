@@ -15,8 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
+import java.util.logging.Logger;
 
 @RequestMapping("/api")
 @RestController
@@ -35,9 +35,38 @@ public class MotivatorController extends HelperFunctions {
     private QuoteRepository quoteRepo;
 
 
+    private static final Logger LOGGER = Logger.getLogger(MotivatorController.class.getName());
+
     /**
      * ======== ENDPOINTS ========
      */
+
+    @RequestMapping("get_motivators_list")
+    public ResponseEntity<Map<String, Object>> getMotivatorsListDTO(Authentication auth){
+
+        if (auth != null) {
+
+
+            AppUser appUser = appUserRepo.findByUsername(auth.getName()).get(0);
+
+            Motivator userMotivator = appUser.getAppUserMotivatorSet().iterator().next().getMotivator();
+
+            LOGGER.info("Current user: " + appUser.getUsername());
+
+
+            Object motivatorsListDTO = makeMotivatorsListDTO(userMotivator, categoryQuoteRepo);
+
+            LOGGER.warning(motivatorsListDTO.toString());
+
+            return new ResponseEntity<>(HelperFunctions.makeMap("dto", motivatorsListDTO), HttpStatus.ACCEPTED);
+
+        } else {
+
+            return new ResponseEntity<>(makeMap("error", "User not authenticated"), HttpStatus.FORBIDDEN);
+
+        }
+
+    }
 
 
     @RequestMapping(value = "save_category",  method = RequestMethod.POST)
@@ -98,9 +127,10 @@ public class MotivatorController extends HelperFunctions {
                 saveCategoryQuotesFromMotivatorListObject(secondCategoriesIterator.next(), categoryRepo, quoteRepo, categoryQuoteRepo);
             }
 
-            //TODO: return motivatorsListDTO
 
-            return new ResponseEntity<>(HelperFunctions.makeMap("success", "List Saved"), HttpStatus.ACCEPTED);
+            LOGGER.info("MotivatorsList successfully Saved!");
+
+            return new ResponseEntity<>(HelperFunctions.makeMap("success", "Motivators List Successfully Saved"), HttpStatus.ACCEPTED);
 
         } else {
 

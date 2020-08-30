@@ -9,10 +9,110 @@ import org.json.JSONObject;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class HelperFunctions {
 
     private static final Logger LOGGER = Logger.getLogger(HelperFunctions.class.getName());
+
+    public static Object makeMotivatorsListDTO(Motivator userMotivator, CategoryQuoteRepository categoryQuoteRepo) {
+
+
+        List<Map<String, Object>> motivatorsList = null;
+
+        Set<Category> categorySet = userMotivator.getCategorySet();
+
+
+
+        boolean cateogriesFound = categorySet.size() > 0;
+
+
+        if(cateogriesFound){
+
+
+            motivatorsList =  categorySet.stream().map(category -> {
+
+                /**
+                 * @first:
+                 *
+                 * fill motivators list with each category's id and category name.
+                 *
+                 */
+
+                Map<String, Object> categoryMap = makeCategoryObjectWithNameAndId(category);
+
+
+                /**
+                 *
+                 * @second:
+                 *
+                 *  find all quotes belonging to the current category
+                 *
+                 */
+
+                Set<CategoryQuote> categoryQuoteSet = categoryQuoteRepo.findByCategoryId(category.getId());
+
+                /**
+                 * @third:
+                 *
+                 * make a quoteObject for each curent category's quotes
+                 * and add it to the current category's map
+                 *
+                 */
+
+                Set<Map<String, Object>> quoteMapSet = makeQuoteMapSet(categoryQuoteSet);
+
+                categoryMap.put("items", quoteMapSet);
+
+                return categoryMap;
+
+            }).collect(Collectors.toList());
+
+
+        } else {
+
+            /**
+             *
+             * if no category was found, return an empty array;
+             *
+             */
+
+            motivatorsList = new ArrayList<>();
+        }
+
+
+
+        return motivatorsList ;
+    }
+
+
+    public static Set<Map<String, Object>> makeQuoteMapSet(Set<CategoryQuote> categoryQuoteSet) {
+        return categoryQuoteSet.stream().map(categoryQuote -> {
+
+            Quote quote = categoryQuote.getQuote();
+
+            return makeQuoteMap(quote);
+
+        }).collect(Collectors.toSet());
+    }
+
+    public static Map<String,Object> makeQuoteMap(Quote quote) {
+
+        Map<String, Object> quoteMap = new HashMap<>();
+
+        quoteMap.put("id", quote.getId());
+        quoteMap.put("content", quote.getContent());
+
+        return quoteMap;
+    }
+
+    public static Map<String, Object> makeCategoryObjectWithNameAndId(Category category) {
+        Map<String, Object> categoryMap = new HashMap<>();
+
+        categoryMap.put("id", category.getId());
+        categoryMap.put("category", category.getName());
+        return categoryMap;
+    }
 
     public static void saveCategoryQuotesFromMotivatorListObject(Object nextObject, CategoryRepository categoryRepo, QuoteRepository quoteRepo, CategoryQuoteRepository categoryQuoteRepo) {
 

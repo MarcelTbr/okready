@@ -1,6 +1,4 @@
-<main  style="background-image: url(https://cdn.pixabay.com/photo/2020/01/28/19/44/man-4800810_960_720.jpg);
- background-position: center; background-size: cover;
- height:1000px; width:100%;">
+<main >
     <section id="add-motivator-to-list" class="container">
 
      <h2>New Motivator Category</h2>
@@ -28,7 +26,7 @@
 
               <select id="categories" name="categories" class="form-control" disabled>
                 <option class="cat-option" value='0' selected="selected">Select One</option>
-                <option data-id="{{motivator.id}}" class="cat-option" value='{{($index + 1) }}' ng-repeat="motivator in motivators_list">{{motivator.category}}</option>
+                <option data-id="{{motivator.id}}" class="cat-option" value='{{($index + 1) }}' ng-repeat="motivator in motivators_list | orderBy: 'id' ">{{motivator.category}}</option>
               </select>
               <span class="form-group">
                 <button id="previous" type="button" name="button" class="btn btn-primary"><</button>
@@ -44,7 +42,7 @@
     </section>
 
     </section>
-    <div id="messages"  >This is a message</div>
+    <div id="messages"  hidden>This is a message</div>
     <section id="browse-motivator-list" class="container">
 
       <span id="title">
@@ -52,13 +50,13 @@
         <span ng-click="saveAll()" id="save-all">Save <i class="far fa-save"></i></span>
       </span>
 
-        <div ng-repeat="motivator in motivators_list">
-             <button class="accordion accordion-custom" ng-click="accToggle($index)"><b>{{motivator.category}}</b></button>
+        <div ng-repeat="motivator in motivators_list | orderBy: 'id' ">
+             <button class="accordion accordion-custom" ng-click="accToggle($index)"><b>{{motivator.category}}</b><span ng-if="motivator.items.length == 0" class="orange"> (empty)  </span></button>
              <div class="panel">
                <ul class="kr_list">
 
-                   <li data-id="{{quote.id}}" class="kr bg-primary text-white shadow rounded" ng-repeat="quote in motivator.items">
-                    {{quote.content}}
+                   <li data-id="{{quote.id}}" class="kr bg-primary text-white shadow rounded" ng-repeat="quote in motivator.items | orderBy: 'id' ">
+                    {{quote.content}} <span ng-if="quote.id == '0'"> (unsaved)</span>
                    </li>
 
                </ul>

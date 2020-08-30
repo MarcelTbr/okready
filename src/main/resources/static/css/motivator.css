@@ -132,3 +132,11 @@ div#new-category-name label, div#add-content-block label {
 div#add-content-block textarea{
     display: inline-block;
 }
+
+.orange {
+    color: #f89406!important;
+}
+
+li[data-id="0"] {
+    color: #f89406!important;
+}

@@ -676,8 +676,13 @@ button#logout:hover i, button#login:hover i {
 }
 
 div#view main {
+    background-image: url(https://cdn.pixabay.com/photo/2020/01/28/19/44/man-4800810_960_720.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height:calc(100vh - 100px);
     height:100%;
-    min-height: 90vh;
+    width:100%;
     padding-bottom: 50px;
 }
 

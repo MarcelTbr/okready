@@ -3,7 +3,10 @@
 app.controller('MotivatorController', ['$scope', '$http', '$location', '$interval', '$timeout', '$window', '$rootScope', '$route', '$routeParams', 'toaster',
     function($scope,  $http, $location, $interval, $timeout, $window, $rootScope, $route, $routeParams, toaster) {
 
-        $scope.motivators_list =
+
+        getMotivatorsListFromAPI();
+
+        var LEGACY_motivators_list =
             [
                 {
                     id: 4,
@@ -35,6 +38,33 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
                         ]
                 }
             ];
+
+
+        function getMotivatorsListFromAPI () {
+
+            var motivatorsListPromise =  $http.get("api/get_motivators_list").then(
+
+               function(response){
+
+                   console.info("api/get_motivators_list", response.data);
+                   toaster.success("Motivators List retrieved!");
+                   $scope.motivators_list = response.data.dto;
+               } ,
+
+                function(error) {
+
+                console.info("api/get_motivators_list", error.data);
+                toaster.error("Sorry could not retrieve Motivators List from server...");
+
+                $scope.motivators_list =   [];
+
+            });
+
+            console.info("motivatorsListPromise.$$state", motivatorsListPromise.then(function(value) {return value;}));
+
+            return motivatorsListPromise;
+
+        }
 
         function makeMotivatorsJSON() {
 
@@ -124,6 +154,8 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
 
                     console.info("api/save_motivators_list", response.data);
 
+                    getMotivatorsListFromAPI();
+
                     toaster.success("List successfully saved!");
                 }, function (error) {
 
@@ -141,6 +173,7 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
 
             $scope.selectedCategoryIndex = null;
             $scope.selectedCategoryName = null;
+            $scope.selectedCategoryId = null;
 
 
             /**
@@ -156,14 +189,17 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
 
             function addItemToCategory() {
 
-                if($scope.selectedCategoryName !== null && $scope.selectedCategoryIndex !== null){
+                if($scope.selectedCategoryName !== null && $scope.selectedCategoryId !== undefined){
 
-                    var category_items_list = $scope.motivators_list[$scope.selectedCategoryIndex].items;
+                    var selected_category_items_list = $scope.motivators_list.filter(function(motivator) { return (motivator.id == $scope.selectedCategoryId); }); //$scope.selectedCategoryId;
+
+                    console.info("selected_category_items_list", selected_category_items_list);
+
                     var new_item = {
-                            id: 0,
-                            content: $scope.motivatorForm.content
-                        };
-                        category_items_list.push(new_item);
+                        id: 0,
+                        content: $scope.motivatorForm.content
+                    };
+                    selected_category_items_list[0].items.push(new_item);
 
                     toaster.info("Content added to " + $scope.selectedCategoryName);
 
@@ -171,13 +207,12 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
 
                     $scope.motivatorForm.content = "";
 
-                    console.log(category_items_list);
+                    console.log(selected_category_items_list);
 
                 } else {
                     toaster.error("Please select the category where you want add your content.");
                 }
             }
-
 
             /**
              *
@@ -203,6 +238,11 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
                     let selected_category_text = categories_list.options[categories_list.selectedIndex].innerText;
                     $scope.selectedCategoryName = selected_category_text;
                     $scope.selectedCategoryIndex =  (categories_list.value - 1);
+
+                    console.info("next: categories_list", categories_list);
+                    $scope.selectedCategoryId = categories_list[categories_list.value].getAttribute("data-id");
+
+                    console.info("$scope.selectedCategoryId", $scope.selectedCategoryId);
                 }
 
             }
@@ -221,8 +261,9 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
                     let selected_category_text = categories_list.options[categories_list.selectedIndex].innerText;
                     $scope.selectedCategoryName = selected_category_text;
                     $scope.selectedCategoryIndex = (categories_list.value + 1);
+                    $scope.selectedCategoryId = categories_list[categories_list.value].getAttribute("data-id");
+                    console.info("$scope.selectedCategoryId", $scope.selectedCategoryId);
                 }
-
             }
 
 
@@ -246,10 +287,6 @@ app.controller('MotivatorController', ['$scope', '$http', '$location', '$interva
                 } else {
                     panel.style.display = "block";
                 }
-
-
-
-
         };
 
 
